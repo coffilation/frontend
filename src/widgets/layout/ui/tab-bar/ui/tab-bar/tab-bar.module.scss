@@ -1,0 +1,8 @@
+.tabs {
+  display: flex;
+  justify-content: space-evenly;
+
+  &::before {
+    content: none;
+  }
+}
