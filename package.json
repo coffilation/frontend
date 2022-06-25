@@ -22,7 +22,8 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build"
+    "build": "craco build",
+    "tools:dtsgen": "./generate-backend-types.sh"
   },
   "eslintConfig": {
     "extends": [

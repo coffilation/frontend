@@ -5,5 +5,6 @@ import { Paths } from './routing'
 
 export const paths: Paths = [
   { path: Path.Collections, component: pages.CollectionsPage, default: true },
+  { path: Path.Collection, component: pages.CollectionPage },
   { path: Path.User, component: pages.UserPage },
 ]
