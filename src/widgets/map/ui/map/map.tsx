@@ -11,6 +11,7 @@ export const Map = () => {
         zoom={13}
         scrollWheelZoom={false}
         className={styles.wrapper}
+        zoomControl={false}
       >
         <TileLayer
           url={`https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.png?apikey=${process.env.REACT_APP_MAPS_API_KEY}`}

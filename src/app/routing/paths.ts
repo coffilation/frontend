@@ -7,4 +7,5 @@ export const paths: Paths = [
   { path: Path.Collections, component: pages.CollectionsPage, default: true },
   { path: Path.Collection, component: pages.CollectionPage },
   { path: Path.User, component: pages.UserPage },
+  { path: Path.Map, component: pages.MapPage },
 ]

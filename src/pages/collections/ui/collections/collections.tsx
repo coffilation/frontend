@@ -8,8 +8,6 @@ import { Path } from 'shared/config'
 export const CollectionsPage = () => {
   const { data: collections } = useCollections()
 
-  console.log(collections)
-
   return (
     <>
       <PageHeader title='Коллекции' />

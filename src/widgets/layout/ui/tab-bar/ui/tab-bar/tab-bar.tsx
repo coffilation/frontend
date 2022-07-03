@@ -2,20 +2,36 @@ import { Menu } from 'antd'
 import { CompassOutlined, UserOutlined } from '@ant-design/icons'
 
 import styles from './tab-bar.module.scss'
-import { generatePath, Link } from 'react-router-dom'
+import { generatePath, Link, useLocation } from 'react-router-dom'
 import { Path } from 'shared/config'
+import { useMemo } from 'react'
 
 export const TabBar = () => {
+  const { pathname } = useLocation()
+
+  const currentLocation = useMemo(
+    () => pathname.split(`/`).at(1) as string,
+    [pathname]
+  )
+
   return (
     <Menu
       mode='horizontal'
-      defaultSelectedKeys={[`collections`]}
+      defaultSelectedKeys={[currentLocation]}
       className={styles.tabs}
       items={[
+        // {
+        //   key: `collections`,
+        //   label: (
+        //     <Link to={Path.Collections}>
+        //       <CompassOutlined />
+        //     </Link>
+        //   ),
+        // },
         {
-          key: `collections`,
+          key: `map`,
           label: (
-            <Link to={Path.Collections}>
+            <Link to={Path.Map}>
               <CompassOutlined />
             </Link>
           ),

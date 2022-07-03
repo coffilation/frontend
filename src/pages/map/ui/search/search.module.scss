@@ -1,0 +1,45 @@
+.backdrop {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background: white;
+  transition: opacity 0.15s;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.backdropHidden {
+  composes: backdrop;
+  opacity: 0;
+}
+
+.searchWrapper {
+  display: flex;
+}
+
+.backButton {
+  opacity: 1;
+  margin-right: 12px;
+  transition: opacity 0.15s 0.15s, margin 0.15s;
+}
+
+.backButtonHidden {
+  composes: backButton;
+  opacity: 0;
+  margin-right: -48px;
+  transition: opacity 0.15s, margin 0.2s;
+}
+
+.listItem {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listItemTitle {
+  font-weight: bold;
+  margin-bottom: 0 !important;
+}
