@@ -43,7 +43,6 @@ interface GeoPoint {
 }
 
 export const useGeoPoints = (search: string | undefined) => {
-  console.log(search)
   return useSWR<GeoPoint[]>(
     search
       ? [routes.search, { params: { q: search, ...defaultSearchParams } }]

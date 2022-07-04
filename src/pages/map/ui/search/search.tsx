@@ -4,15 +4,31 @@ import { useGeoPointsSearch } from '../../lib'
 import { useBoolean } from 'shared/hooks'
 
 import styles from './search.module.scss'
+import { Dispatch, SetStateAction, useCallback } from 'react'
 
-export const Search = () => {
-  const { geoPoints, handleSearch, isValidating } = useGeoPointsSearch()
+interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
+  setActiveGeoPointIndex: Dispatch<SetStateAction<number | undefined>>
+}
 
+export const Search = ({
+  handleSearch,
+  isValidating,
+  geoPoints,
+  setActiveGeoPointIndex,
+}: SearchProps) => {
   const {
     value: isBackdropVisible,
     setIsTrue: showBackdrop,
     setIsFalse: hideBackdrop,
   } = useBoolean()
+
+  const getHandleClick = useCallback(
+    (pointIndex: number) => () => {
+      setActiveGeoPointIndex(pointIndex)
+      hideBackdrop()
+    },
+    [hideBackdrop, setActiveGeoPointIndex]
+  )
 
   return (
     <>
@@ -37,8 +53,12 @@ export const Search = () => {
       </div>
       {isBackdropVisible && !isValidating && (
         <List>
-          {geoPoints?.map((geoPoint) => (
-            <List.Item className={styles.listItem} key={geoPoint.osm_id}>
+          {geoPoints?.map((geoPoint, index) => (
+            <List.Item
+              className={styles.listItem}
+              key={geoPoint.osm_id}
+              onClick={getHandleClick(index)}
+            >
               <Typography.Paragraph className={styles.listItemTitle}>
                 {geoPoint.namedetails.name}
               </Typography.Paragraph>
