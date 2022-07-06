@@ -45,7 +45,6 @@ export const Search = ({
       />
       <div className={styles.searchWrapper}>
         <Button
-          size='large'
           className={
             isBackdropVisible || hasActiveGeoPointIndex
               ? styles.backButton
@@ -60,7 +59,6 @@ export const Search = ({
           <ArrowLeftOutlined />
         </Button>
         <Input.Search
-          size='large'
           loading={isValidating}
           onSearch={handleSearch}
           onFocus={showBackdrop}

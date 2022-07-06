@@ -4,10 +4,12 @@ import { Search } from '../search'
 import styles from './map.module.scss'
 import { useGeoPointsSearch } from 'pages/map/lib'
 import { useState } from 'react'
-import { Typography } from 'antd'
+import { Button, Rate, Typography } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
 
 export const MapPage = () => {
-  const { geoPoints, handleSearch, isValidating, clearGeoPoints } = useGeoPointsSearch()
+  const { geoPoints, handleSearch, isValidating, clearGeoPoints } =
+    useGeoPointsSearch()
   const [activeGeoPointIndex, setActiveGeoPointIndex] = useState<number>()
 
   const hasActiveGeoPointIndex = activeGeoPointIndex !== undefined
@@ -31,10 +33,12 @@ export const MapPage = () => {
       </div>
       {hasActiveGeoPointIndex && (
         <div className={styles.infoWrapper}>
-          <Typography.Title level={5}>
+          <Typography.Paragraph>
             {geoPoints?.[activeGeoPointIndex].display_name}
-          </Typography.Title>
-
+          </Typography.Paragraph>
+          <Button block icon={<PlusOutlined />}>В коллекцию</Button>
+          <Typography.Title level={3} className={styles.blockTitle}>Отзывы</Typography.Title>
+          <Rate />
         </div>
       )}
       <div className={styles.searchWrapper}>

@@ -6,6 +6,7 @@ import { AxiosRequestConfig } from 'axios'
 
 import { App } from 'app'
 import { api } from 'shared/api'
+import { ConfigProvider } from 'antd'
 
 const root = ReactDOM.createRoot(document.getElementById(`root`) as HTMLElement)
 root.render(
@@ -15,8 +16,10 @@ root.render(
         api.get(url, config).then((response) => response.data),
     }}
   >
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ConfigProvider componentSize='large'>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ConfigProvider>
   </SWRConfig>
 )
