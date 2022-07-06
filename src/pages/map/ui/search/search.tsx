@@ -8,6 +8,7 @@ import { Dispatch, SetStateAction, useCallback } from 'react'
 
 interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
   setActiveGeoPointIndex: Dispatch<SetStateAction<number | undefined>>
+  hasActiveGeoPointIndex: boolean
 }
 
 export const Search = ({
@@ -15,6 +16,8 @@ export const Search = ({
   isValidating,
   geoPoints,
   setActiveGeoPointIndex,
+  hasActiveGeoPointIndex,
+  clearGeoPoints,
 }: SearchProps) => {
   const {
     value: isBackdropVisible,
@@ -30,6 +33,11 @@ export const Search = ({
     [hideBackdrop, setActiveGeoPointIndex]
   )
 
+  const cancelSearch = useCallback(() => {
+    clearGeoPoints()
+    setActiveGeoPointIndex(undefined)
+  }, [clearGeoPoints, setActiveGeoPointIndex])
+
   return (
     <>
       <div
@@ -39,10 +47,17 @@ export const Search = ({
         <Button
           size='large'
           className={
-            isBackdropVisible ? styles.backButton : styles.backButtonHidden
+            isBackdropVisible || hasActiveGeoPointIndex
+              ? styles.backButton
+              : styles.backButtonHidden
+          }
+          onClick={
+            hasActiveGeoPointIndex && !isBackdropVisible
+              ? cancelSearch
+              : hideBackdrop
           }
         >
-          <ArrowLeftOutlined onClick={hideBackdrop} />
+          <ArrowLeftOutlined />
         </Button>
         <Input.Search
           size='large'

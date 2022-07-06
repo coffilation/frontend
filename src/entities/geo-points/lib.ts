@@ -9,7 +9,7 @@ const defaultSearchParams = {
   countrycodes: `ru`,
 }
 
-interface GeoPoint {
+export interface GeoPoint {
   place_id: number
   licence: string
   osm_type: string

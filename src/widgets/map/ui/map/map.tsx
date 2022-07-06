@@ -1,28 +1,23 @@
-import { CircleMarker, MapContainer, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet'
 import React, { useMemo } from 'react'
 
 import styles from './map.module.scss'
-import { PathOptions } from 'leaflet'
-import { useGeoPointsSearch } from 'pages/map/lib'
+import { Point } from 'widgets/map/ui/point/point'
+import classNames from 'classnames'
+import { GeoPoint } from 'entities/geo-points/lib'
+import { PanRestorer } from 'widgets/map/ui/pan-restorer/pan-restorer'
 
 interface MapProps {
-  geoPoints?: ReturnType<typeof useGeoPointsSearch>['geoPoints']
+  className?: string
+  geoPoints?: GeoPoint[]
   activeGeoPointIndex: number | undefined
 }
 
-const markerPathOptions: PathOptions = {
-  color: '#663F3F',
-  weight: 4,
-  fillColor: `#fff`,
-  fillOpacity: 1,
-}
-
-const activeMarkerPathOptions: PathOptions = {
-  ...markerPathOptions,
-  color: '#EC4646',
-}
-
-export const Map = ({ geoPoints, activeGeoPointIndex }: MapProps) => {
+export const Map = ({
+  geoPoints,
+  activeGeoPointIndex,
+  className,
+}: MapProps) => {
   const activeGeoPoint = useMemo(() => {
     if (activeGeoPointIndex !== undefined) {
       return geoPoints?.[activeGeoPointIndex]
@@ -39,28 +34,21 @@ export const Map = ({ geoPoints, activeGeoPointIndex }: MapProps) => {
         }
         zoom={13}
         scrollWheelZoom={false}
-        className={styles.wrapper}
+        className={classNames(styles.wrapper, className)}
         zoomControl={false}
       >
         <TileLayer
           url={`https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.png?apikey=${process.env.REACT_APP_MAPS_API_KEY}`}
         />
-        {geoPoints?.map((getPoint) => (
-          <CircleMarker
-            key={getPoint.osm_id}
-            center={[parseFloat(getPoint.lat), parseFloat(getPoint.lon)]}
-            pathOptions={
-              getPoint.osm_id === activeGeoPoint?.osm_id
-                ? activeMarkerPathOptions
-                : markerPathOptions
-            }
-            radius={6}
-          >
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily customizable.
-            </Popup>
-          </CircleMarker>
+        {geoPoints?.map((geoPoint) => (
+          <Point
+            key={geoPoint.osm_id}
+            latitude={parseFloat(geoPoint.lat)}
+            longitude={parseFloat(geoPoint.lon)}
+            isSelected={geoPoint.osm_id === activeGeoPoint?.osm_id}
+          />
         ))}
+        <PanRestorer hasActiveGeoPoint={activeGeoPointIndex !== undefined} />
       </MapContainer>
     </>
   )
