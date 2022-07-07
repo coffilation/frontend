@@ -14,37 +14,41 @@ export const TabBar = () => {
     [pathname]
   )
 
+  const items = useMemo(() => {
+    return [
+      // {
+      //   key: `collections`,
+      //   label: (
+      //     <Link to={Path.Collections}>
+      //       <CompassOutlined />
+      //     </Link>
+      //   ),
+      // },
+      {
+        key: `map`,
+        label: (
+          <Link to={Path.Map}>
+            <CompassOutlined />
+          </Link>
+        ),
+      },
+      {
+        key: `profile`,
+        label: (
+          <Link to={generatePath(Path.Profile)}>
+            <UserOutlined />
+          </Link>
+        ),
+      },
+    ]
+  }, [])
+
   return (
     <Menu
       mode='horizontal'
       defaultSelectedKeys={[currentLocation]}
       className={styles.tabs}
-      items={[
-        // {
-        //   key: `collections`,
-        //   label: (
-        //     <Link to={Path.Collections}>
-        //       <CompassOutlined />
-        //     </Link>
-        //   ),
-        // },
-        {
-          key: `map`,
-          label: (
-            <Link to={Path.Map}>
-              <CompassOutlined />
-            </Link>
-          ),
-        },
-        {
-          key: `user`,
-          label: (
-            <Link to={generatePath(Path.User, { userId: `1` })}>
-              <UserOutlined />
-            </Link>
-          ),
-        },
-      ]}
+      items={items}
     />
   )
 }

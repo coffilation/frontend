@@ -7,6 +7,7 @@ import { AxiosRequestConfig } from 'axios'
 import { App } from 'app'
 import { api } from 'shared/api'
 import { ConfigProvider } from 'antd'
+import { AuthProvider } from 'processes/auth/ui/auth-provider'
 
 const root = ReactDOM.createRoot(document.getElementById(`root`) as HTMLElement)
 root.render(
@@ -18,7 +19,9 @@ root.render(
   >
     <ConfigProvider componentSize='large'>
       <BrowserRouter>
-        <App />
+        <AuthProvider>
+          <App />
+        </AuthProvider>
       </BrowserRouter>
     </ConfigProvider>
   </SWRConfig>

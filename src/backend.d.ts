@@ -13,6 +13,7 @@ declare namespace Components {
       name: string
       latitude: number
       longitude: number
+      osmId: number
     }
     export interface CreateReviewDto {}
     export interface CreateUserDto {
@@ -29,6 +30,7 @@ declare namespace Components {
       name: string
       latitude: number
       longitude: number
+      osmId: number
     }
     export interface RefreshTokenPairDto {
       refresh: string
@@ -45,6 +47,7 @@ declare namespace Components {
       name?: string
       latitude?: number
       longitude?: number
+      osmId?: number
     }
     export interface UpdateReviewDto {}
     export interface UpdateUserDto {
@@ -212,9 +215,9 @@ declare namespace Paths {
       export type $201 = Components.Schemas.User
     }
   }
-  namespace UsersControllerFindAll {
+  namespace UsersControllerFindMe {
     namespace Responses {
-      export type $200 = Components.Schemas.User[]
+      export type $200 = Components.Schemas.User
     }
   }
   namespace UsersControllerFindOne {

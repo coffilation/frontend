@@ -1,4 +1,10 @@
 export const routes = {
   collections: `/collections`,
-  search: `https://nominatim.openstreetmap.org/search`
+
+  authLogin: `/auth/login`,
+  authRefresh: `/auth/refresh`,
+
+  usersMe: `/users/me`,
+
+  search: `https://nominatim.openstreetmap.org/search`,
 }
