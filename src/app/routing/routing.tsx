@@ -19,8 +19,6 @@ export const Routing = ({ paths }: Props) => {
 
   const defaultPath = paths.find((route) => route.default)?.path
 
-  console.log(defaultPath)
-
   return (
     <TransitionGroup>
       <CSSTransition

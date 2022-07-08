@@ -1,10 +1,10 @@
 import { Button, Form, Input } from 'antd'
-import { useLogin } from '../../lib'
+import { useHandleLogin } from '../../lib'
 
 import styles from './login.module.scss'
 
 export const Login = () => {
-  const { handleLogin } = useLogin()
+  const { handleLogin } = useHandleLogin()
 
   return (
     <Form className={styles.form} onFinish={handleLogin}>

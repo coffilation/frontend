@@ -4,6 +4,7 @@ declare namespace Components {
       id: number
       name: string
       points: Point[]
+      author: User
     }
     export interface CreateCollectionDto {
       name: string
@@ -81,6 +82,12 @@ declare namespace Paths {
     }
   }
   namespace CollectionsControllerFindAll {
+    namespace Parameters {
+      export type AuthorId = number
+    }
+    export interface QueryParameters {
+      authorId?: Parameters.AuthorId
+    }
     namespace Responses {
       export type $200 = Components.Schemas.Collection[]
     }
