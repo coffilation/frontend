@@ -4,12 +4,14 @@ import { useGeoPointsSearch } from '../../lib'
 import { useBoolean } from 'shared/hooks'
 
 import styles from './search.module.scss'
-import { Dispatch, SetStateAction, useCallback } from 'react'
+import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
 import { GeoPoint } from 'entities/geo-points/lib'
-import {geoPointToPlace} from "pages/map/lib/geo-point-to-place";
+import { geoPointToPlace } from 'pages/map/lib/geo-point-to-place'
 
 interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
-  setActivePlace: Dispatch<SetStateAction<Components.Schemas.CreatePlaceDto | undefined>>
+  setActivePlace: Dispatch<
+    SetStateAction<Components.Schemas.CreatePlaceDto | undefined>
+  >
   hasActivePlace: boolean
 }
 
@@ -40,6 +42,12 @@ export const Search = ({
     setActivePlace(undefined)
   }, [clearGeoPoints, setActivePlace])
 
+  useEffect(() => {
+    if (geoPoints) {
+      showBackdrop()
+    }
+  }, [geoPoints, showBackdrop])
+
   return (
     <>
       <div
@@ -53,9 +61,7 @@ export const Search = ({
               : styles.backButtonHidden
           }
           onClick={
-            hasActivePlace && !isBackdropVisible
-              ? cancelSearch
-              : hideBackdrop
+            hasActivePlace && !isBackdropVisible ? cancelSearch : hideBackdrop
           }
         >
           <ArrowLeftOutlined />
@@ -63,7 +69,7 @@ export const Search = ({
         <Input.Search
           loading={isValidating}
           onSearch={handleSearch}
-          onFocus={showBackdrop}
+          onFocus={geoPoints && showBackdrop}
         />
       </div>
       {isBackdropVisible && !isValidating && (
