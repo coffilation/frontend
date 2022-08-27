@@ -7,6 +7,7 @@ import { ComponentProps, useMemo, useState } from 'react'
 import { Place } from 'widgets/place/ui/place'
 import { usePlaces } from 'entities/places/lib'
 import { geoPointToPlace } from 'pages/map/lib/geo-point-to-place'
+import {Filters} from "pages/map/ui/filters";
 
 export const MapPage = () => {
   const { geoPoints, handleSearch, isValidating, clearGeoPoints } =
@@ -51,6 +52,7 @@ export const MapPage = () => {
           clearGeoPoints={clearGeoPoints}
         />
       </div>
+      <Filters />
     </div>
   )
 }
