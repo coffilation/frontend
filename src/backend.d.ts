@@ -3,14 +3,17 @@ declare namespace Components {
     export interface Collection {
       id: number
       name: string
-      points: Point[]
+      places: Place[]
       author: User
+    }
+    export interface CollectionPlacesDto {
+      placeIds: number[]
     }
     export interface CreateCollectionDto {
       name: string
-      points: number[]
+      places: number[]
     }
-    export interface CreatePointDto {
+    export interface CreatePlaceDto {
       name: string
       latitude: number
       longitude: number
@@ -26,7 +29,7 @@ declare namespace Components {
       username: string
       password: string
     }
-    export interface Point {
+    export interface Place {
       id: number
       name: string
       latitude: number
@@ -42,9 +45,11 @@ declare namespace Components {
     }
     export interface UpdateCollectionDto {
       name?: string
-      points?: number[]
     }
-    export interface UpdatePointDto {
+    export interface UpdatePlaceCollectionsDto {
+      collectionIds: number[]
+    }
+    export interface UpdatePlaceDto {
       name?: string
       latitude?: number
       longitude?: number
@@ -73,6 +78,18 @@ declare namespace Paths {
     export type RequestBody = Components.Schemas.RefreshTokenPairDto
     namespace Responses {
       export type $200 = Components.Schemas.TokenPair
+    }
+  }
+  namespace CollectionsControllerAddPlaces {
+    namespace Parameters {
+      export type Id = string
+    }
+    export interface PathParameters {
+      id: Parameters.Id
+    }
+    export type RequestBody = Components.Schemas.CollectionPlacesDto
+    namespace Responses {
+      export type $201 = Components.Schemas.Collection
     }
   }
   namespace CollectionsControllerCreate {
@@ -114,6 +131,18 @@ declare namespace Paths {
       export interface $200 {}
     }
   }
+  namespace CollectionsControllerRemovePlaces {
+    namespace Parameters {
+      export type Id = string
+    }
+    export interface PathParameters {
+      id: Parameters.Id
+    }
+    export type RequestBody = Components.Schemas.CollectionPlacesDto
+    namespace Responses {
+      export type $201 = Components.Schemas.Collection
+    }
+  }
   namespace CollectionsControllerUpdate {
     namespace Parameters {
       export type Id = string
@@ -126,49 +155,72 @@ declare namespace Paths {
       export type $200 = Components.Schemas.Collection
     }
   }
-  namespace PointsControllerCreate {
-    export type RequestBody = Components.Schemas.CreatePointDto
+  namespace PlacesControllerCreate {
+    export type RequestBody = Components.Schemas.CreatePlaceDto
     namespace Responses {
-      export type $201 = Components.Schemas.Point
+      export type $201 = Components.Schemas.Place
     }
   }
-  namespace PointsControllerFindAll {
+  namespace PlacesControllerFindAll {
     namespace Responses {
-      export type $200 = Components.Schemas.Point[]
+      export type $200 = Components.Schemas.Place[]
     }
   }
-  namespace PointsControllerFindOne {
+  namespace PlacesControllerFindOne {
     namespace Parameters {
-      export type Id = string
+      export type OsmId = string
     }
     export interface PathParameters {
-      id: Parameters.Id
+      osmId: Parameters.OsmId
     }
     namespace Responses {
-      export type $200 = Components.Schemas.Point
+      export type $200 = Components.Schemas.Place
     }
   }
-  namespace PointsControllerRemove {
+  namespace PlacesControllerFindPlaceCollections {
     namespace Parameters {
-      export type Id = string
+      export type OsmId = string
     }
     export interface PathParameters {
-      id: Parameters.Id
+      osmId: Parameters.OsmId
+    }
+    namespace Responses {
+      export type $200 = Components.Schemas.Collection[]
+    }
+  }
+  namespace PlacesControllerRemove {
+    namespace Parameters {
+      export type OsmId = string
+    }
+    export interface PathParameters {
+      osmId: Parameters.OsmId
     }
     namespace Responses {
       export interface $204 {}
     }
   }
-  namespace PointsControllerUpdate {
+  namespace PlacesControllerUpdate {
     namespace Parameters {
-      export type Id = string
+      export type OsmId = string
     }
     export interface PathParameters {
-      id: Parameters.Id
+      osmId: Parameters.OsmId
     }
-    export type RequestBody = Components.Schemas.UpdatePointDto
+    export type RequestBody = Components.Schemas.UpdatePlaceDto
     namespace Responses {
-      export type $200 = Components.Schemas.Point
+      export type $200 = Components.Schemas.Place
+    }
+  }
+  namespace PlacesControllerUpdatePlaceCollections {
+    namespace Parameters {
+      export type OsmId = string
+    }
+    export interface PathParameters {
+      osmId: Parameters.OsmId
+    }
+    export type RequestBody = Components.Schemas.UpdatePlaceCollectionsDto
+    namespace Responses {
+      export type $200 = Components.Schemas.Collection[]
     }
   }
   namespace ReviewsControllerCreate {

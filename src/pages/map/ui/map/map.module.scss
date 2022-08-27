@@ -6,43 +6,9 @@
 }
 
 .mapWrapper {
-  position: relative;
   height: 100%;
   transition: margin 0.15s, height 0.15s;
 }
-
-.shortenedMapWrapper {
-  composes: mapWrapper;
-  height: 0;
-  padding-bottom: 56.25%;
-  margin: 88px 24px 0;
-
-  .mapContainer {
-    //margin: 0 24px;
-  }
-
-  .map {
-    border-radius: 12px;
-    overflow: hidden !important;
-  }
-}
-
-.mapContainer {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  transition: margin 0.15s;
-}
-
-//.button {
-//  position: absolute;
-//  right: 24px;
-//  bottom: 24px;
-//
-//  z-index: 1000;
-//}
 
 .searchWrapper {
   position: fixed;
@@ -50,12 +16,4 @@
   left: 24px;
   right: 24px;
   z-index: 1000;
-}
-
-.infoWrapper {
-  padding: 24px;
-}
-
-.blockTitle {
-  margin-top: 24px;
 }

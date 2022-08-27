@@ -24,25 +24,15 @@ export const Point = ({ latitude, longitude, isSelected }: PointProps) => {
   const map = useMap()
 
   useEffect(() => {
-    let sizeTimer: ReturnType<typeof setTimeout>
-    let viewTimer: ReturnType<typeof setTimeout>
-
     if (isSelected) {
-      sizeTimer = setTimeout(() => {
-        map.invalidateSize({ animate: true, duration: 0.15 })
-      }, 150)
 
-      viewTimer = setTimeout(() => {
-        map.setView([latitude, longitude], map.getZoom(), {
-          animate: true,
-          duration: 0.15,
-        })
-      }, 300)
-    }
+      const point = map.project([latitude, longitude])
+      point.y += 160
 
-    return () => {
-      clearTimeout(sizeTimer)
-      clearTimeout(viewTimer)
+      map.flyTo(map.unproject(point), map.getZoom(), {
+        animate: true,
+        duration: 0.15,
+      })
     }
   }, [isSelected, latitude, longitude, map])
 

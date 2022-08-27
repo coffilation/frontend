@@ -4,8 +4,7 @@ import { Search } from '../search'
 import styles from './map.module.scss'
 import { useGeoPointsSearch } from 'pages/map/lib'
 import { useState } from 'react'
-import { Button, Rate, Typography } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
+import { Place } from 'widgets/place/ui/place'
 
 export const MapPage = () => {
   const { geoPoints, handleSearch, isValidating, clearGeoPoints } =
@@ -16,30 +15,15 @@ export const MapPage = () => {
 
   return (
     <div className={styles.wrapper}>
-      <div
-        className={
-          hasActiveGeoPointIndex
-            ? styles.shortenedMapWrapper
-            : styles.mapWrapper
-        }
-      >
-        <div className={styles.mapContainer}>
-          <Map
-            className={styles.map}
-            geoPoints={geoPoints}
-            activeGeoPointIndex={activeGeoPointIndex}
-          />
-        </div>
+      <div className={styles.mapWrapper}>
+        <Map
+          className={styles.map}
+          geoPoints={geoPoints}
+          activeGeoPointIndex={activeGeoPointIndex}
+        />
       </div>
       {hasActiveGeoPointIndex && (
-        <div className={styles.infoWrapper}>
-          <Typography.Paragraph>
-            {geoPoints?.[activeGeoPointIndex].display_name}
-          </Typography.Paragraph>
-          <Button block icon={<PlusOutlined />}>В коллекцию</Button>
-          <Typography.Title level={3} className={styles.blockTitle}>Отзывы</Typography.Title>
-          <Rate />
-        </div>
+        <Place geoPoint={geoPoints?.[activeGeoPointIndex]} />
       )}
       <div className={styles.searchWrapper}>
         <Search

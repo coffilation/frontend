@@ -1,0 +1,32 @@
+.infoWrapper {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  padding: 24px;
+  z-index: 1000;
+  border-radius: 2px;
+  background: white;
+  height: 360px;
+  border: 1px solid #d9d9d9;
+}
+
+.blockTitle.blockTitle {
+  margin: 0;
+}
+
+.select {
+  width: 100%;
+}
+
+.collectionsTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 24px 0 12px;
+}
+
+.tag {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
