@@ -6,12 +6,13 @@ import { useGeoPointsSearch } from 'pages/map/lib'
 import { ComponentProps, useMemo, useState } from 'react'
 import { Place } from 'widgets/place/ui/place'
 import { usePlaces } from 'entities/places/lib'
-import {GeoPoint} from "entities/geo-points/lib";
+import { geoPointToPlace } from 'pages/map/lib/geo-point-to-place'
 
 export const MapPage = () => {
   const { geoPoints, handleSearch, isValidating, clearGeoPoints } =
     useGeoPointsSearch()
-  const [activeGeoPoint, setActiveGeoPoint] = useState<GeoPoint>()
+  const [activePlace, setActivePlace] =
+    useState<Components.Schemas.CreatePlaceDto>()
 
   const { data: places } = usePlaces()
 
@@ -23,13 +24,7 @@ export const MapPage = () => {
     }
 
     if (geoPoints) {
-      points = points.concat(
-        geoPoints.map((point) => ({
-          osmId: point.osm_id,
-          latitude: parseFloat(point.lat),
-          longitude: parseFloat(point.lon),
-        }))
-      )
+      points = points.concat(geoPoints.map(geoPointToPlace))
     }
 
     return points
@@ -41,19 +36,18 @@ export const MapPage = () => {
         <Map
           className={styles.map}
           points={points}
-          activeGeoPoint={activeGeoPoint}
+          activePlace={activePlace}
+          setActivePlace={setActivePlace}
         />
       </div>
-      {!!activeGeoPoint && (
-        <Place geoPoint={activeGeoPoint} />
-      )}
+      {!!activePlace && <Place place={activePlace} />}
       <div className={styles.searchWrapper}>
         <Search
           handleSearch={handleSearch}
           geoPoints={geoPoints}
           isValidating={isValidating}
-          setActiveGeoPoint={setActiveGeoPoint}
-          hasActiveGeoPoint={!!activeGeoPoint}
+          setActivePlace={setActivePlace}
+          hasActivePlace={!!activePlace}
           clearGeoPoints={clearGeoPoints}
         />
       </div>

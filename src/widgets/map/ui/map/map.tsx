@@ -1,26 +1,26 @@
 import { MapContainer, TileLayer } from 'react-leaflet'
-import React  from 'react'
+import React, {Dispatch, SetStateAction} from 'react'
 
 import styles from './map.module.scss'
 import { Point } from 'widgets/map/ui/point/point'
 import classNames from 'classnames'
-import { GeoPoint } from 'entities/geo-points/lib'
 import { PanRestorer } from 'widgets/map/ui/pan-restorer/pan-restorer'
 
 interface MapProps {
   className?: string
-  points?: Pick<Components.Schemas.Place, `osmId` | `latitude` | `longitude`>[]
-  activeGeoPoint: GeoPoint | undefined
+  points?: Components.Schemas.CreatePlaceDto[]
+  activePlace: Components.Schemas.CreatePlaceDto | undefined
+  setActivePlace: Dispatch<SetStateAction<Components.Schemas.CreatePlaceDto | undefined>>
 }
 
-export const Map = ({ points, activeGeoPoint, className }: MapProps) => {
+export const Map = ({ points, activePlace, className, setActivePlace }: MapProps) => {
 
   return (
     <>
       <MapContainer
         center={
-          activeGeoPoint
-            ? [parseFloat(activeGeoPoint.lat), parseFloat(activeGeoPoint.lon)]
+          activePlace
+            ? [activePlace.latitude, activePlace.longitude]
             : [59.9375, 30.308611]
         }
         zoom={13}
@@ -34,12 +34,12 @@ export const Map = ({ points, activeGeoPoint, className }: MapProps) => {
         {points?.map((point) => (
           <Point
             key={point.osmId}
-            latitude={point.latitude}
-            longitude={point.longitude}
-            isSelected={point.osmId === activeGeoPoint?.osm_id}
+            place={point}
+            isSelected={point.osmId === activePlace?.osmId}
+            setActivePlace={setActivePlace}
           />
         ))}
-        <PanRestorer hasActiveGeoPoint={!!activeGeoPoint} />
+        <PanRestorer hasActiveGeoPoint={!!activePlace} />
       </MapContainer>
     </>
   )

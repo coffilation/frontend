@@ -1,35 +1,30 @@
 import { postPlace, putPlaceCollections, usePlace } from 'entities/places/lib'
 import { useCallback } from 'react'
-import { GeoPoint } from 'entities/geo-points/lib'
-import { mutate } from 'swr'
 
-export const useEditPlaceCollections = (geoPoint: GeoPoint | undefined) => {
+export const useEditPlaceCollections = (
+  place: Components.Schemas.CreatePlaceDto | undefined
+) => {
   const { error: placeError, isValidating: isPlaceValidating } = usePlace(
-    geoPoint?.osm_id
+    place?.osmId
   )
 
   const handleEditPlaceCollections = useCallback(
     async (
       placeCollectionIds: Components.Schemas.UpdatePlaceCollectionsDto
     ) => {
-      console.log(placeCollectionIds, geoPoint)
+      console.log(placeCollectionIds, place)
 
-      if (!geoPoint || isPlaceValidating) {
+      if (!place || isPlaceValidating) {
         return
       }
 
       if (placeError?.response?.status === 404) {
-        await postPlace({
-          latitude: parseFloat(geoPoint.lat),
-          longitude: parseFloat(geoPoint.lon),
-          name: geoPoint.display_name,
-          osmId: geoPoint.osm_id,
-        })
+        await postPlace(place)
       }
 
-      await putPlaceCollections(geoPoint.osm_id, placeCollectionIds)
+      await putPlaceCollections(place.osmId, placeCollectionIds)
     },
-    [geoPoint, isPlaceValidating, placeError?.response?.status]
+    [place, isPlaceValidating, placeError?.response?.status]
   )
 
   return { handleEditPlaceCollections }

@@ -6,18 +6,19 @@ import { useBoolean } from 'shared/hooks'
 import styles from './search.module.scss'
 import { Dispatch, SetStateAction, useCallback } from 'react'
 import { GeoPoint } from 'entities/geo-points/lib'
+import {geoPointToPlace} from "pages/map/lib/geo-point-to-place";
 
 interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
-  setActiveGeoPoint: Dispatch<SetStateAction<GeoPoint | undefined>>
-  hasActiveGeoPoint: boolean
+  setActivePlace: Dispatch<SetStateAction<Components.Schemas.CreatePlaceDto | undefined>>
+  hasActivePlace: boolean
 }
 
 export const Search = ({
   handleSearch,
   isValidating,
   geoPoints,
-  setActiveGeoPoint,
-  hasActiveGeoPoint,
+  setActivePlace,
+  hasActivePlace,
   clearGeoPoints,
 }: SearchProps) => {
   const {
@@ -28,16 +29,16 @@ export const Search = ({
 
   const getHandleClick = useCallback(
     (geoPoint: GeoPoint) => () => {
-      setActiveGeoPoint(geoPoint)
+      setActivePlace(geoPointToPlace(geoPoint))
       hideBackdrop()
     },
-    [hideBackdrop, setActiveGeoPoint]
+    [hideBackdrop, setActivePlace]
   )
 
   const cancelSearch = useCallback(() => {
     clearGeoPoints()
-    setActiveGeoPoint(undefined)
-  }, [clearGeoPoints, setActiveGeoPoint])
+    setActivePlace(undefined)
+  }, [clearGeoPoints, setActivePlace])
 
   return (
     <>
@@ -47,12 +48,12 @@ export const Search = ({
       <div className={styles.searchWrapper}>
         <Button
           className={
-            isBackdropVisible || hasActiveGeoPoint
+            isBackdropVisible || hasActivePlace
               ? styles.backButton
               : styles.backButtonHidden
           }
           onClick={
-            hasActiveGeoPoint && !isBackdropVisible
+            hasActivePlace && !isBackdropVisible
               ? cancelSearch
               : hideBackdrop
           }

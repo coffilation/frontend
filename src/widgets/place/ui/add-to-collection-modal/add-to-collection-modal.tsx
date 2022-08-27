@@ -3,25 +3,22 @@ import { ComponentProps, useMemo } from 'react'
 import { useCollections } from 'entities/collections/lib'
 
 import styles from './add-to-collection-modal.module.scss'
-import { GeoPoint } from 'entities/geo-points/lib'
 import { useEditPlaceCollections } from 'widgets/place/lib/use-edit-place-collections'
 
 interface AddToCollectionModalProps
   extends Pick<ComponentProps<typeof Modal>, `visible` | `onCancel`> {
   placeCollections: Components.Schemas.Collection[]
-  isPlaceCollectionsValidating: boolean
-  geoPoint: GeoPoint | undefined
+  place: Components.Schemas.CreatePlaceDto | undefined
 }
 
 export const AddToCollectionModal = ({
   visible,
   onCancel,
   placeCollections,
-  isPlaceCollectionsValidating,
-  geoPoint,
+  place,
 }: AddToCollectionModalProps) => {
   const { data: collections } = useCollections()
-  const { handleEditPlaceCollections } = useEditPlaceCollections(geoPoint)
+  const { handleEditPlaceCollections } = useEditPlaceCollections(place)
 
   const [form] = Form.useForm()
 

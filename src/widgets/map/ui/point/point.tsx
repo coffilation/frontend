@@ -1,11 +1,13 @@
 import { CircleMarker, Popup, useMap } from 'react-leaflet'
-import React, { useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import { PathOptions } from 'leaflet'
 
 interface PointProps {
-  latitude: number
-  longitude: number
-  isSelected?: boolean
+  place: Components.Schemas.CreatePlaceDto
+  setActivePlace: Dispatch<
+    SetStateAction<Components.Schemas.CreatePlaceDto | undefined>
+  >
+  isSelected: boolean
 }
 
 const markerPathOptions: PathOptions = {
@@ -20,13 +22,12 @@ const activeMarkerPathOptions: PathOptions = {
   color: '#EC4646',
 }
 
-export const Point = ({ latitude, longitude, isSelected }: PointProps) => {
+export const Point = ({ isSelected, setActivePlace, place }: PointProps) => {
   const map = useMap()
 
   useEffect(() => {
     if (isSelected) {
-
-      const point = map.project([latitude, longitude])
+      const point = map.project([place.latitude, place.longitude])
       point.y += 160
 
       map.flyTo(map.unproject(point), map.getZoom(), {
@@ -34,14 +35,17 @@ export const Point = ({ latitude, longitude, isSelected }: PointProps) => {
         duration: 0.15,
       })
     }
-  }, [isSelected, latitude, longitude, map])
+  }, [isSelected, map, place.latitude, place.longitude])
 
   return (
     <>
       <CircleMarker
-        center={[latitude, longitude]}
+        center={[place.latitude, place.longitude]}
         pathOptions={isSelected ? activeMarkerPathOptions : markerPathOptions}
         radius={6}
+        eventHandlers={{
+          click: () => setActivePlace(place),
+        }}
       >
         <Popup>
           A pretty CSS3 popup. <br /> Easily customizable.
