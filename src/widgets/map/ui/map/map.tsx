@@ -1,20 +1,29 @@
 import { MapContainer, TileLayer } from 'react-leaflet'
-import React, {Dispatch, SetStateAction} from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import styles from './map.module.scss'
 import { Point } from 'widgets/map/ui/point/point'
 import classNames from 'classnames'
 import { PanRestorer } from 'widgets/map/ui/pan-restorer/pan-restorer'
+import { Controls } from 'widgets/map/ui/controls'
 
 interface MapProps {
   className?: string
   points?: Components.Schemas.CreatePlaceDto[]
+  showControls?: boolean
   activePlace: Components.Schemas.CreatePlaceDto | undefined
-  setActivePlace: Dispatch<SetStateAction<Components.Schemas.CreatePlaceDto | undefined>>
+  setActivePlace: Dispatch<
+    SetStateAction<Components.Schemas.CreatePlaceDto | undefined>
+  >
 }
 
-export const Map = ({ points, activePlace, className, setActivePlace }: MapProps) => {
-
+export const Map = ({
+  points,
+  activePlace,
+  className,
+  setActivePlace,
+  showControls,
+}: MapProps) => {
   return (
     <>
       <MapContainer
@@ -40,6 +49,7 @@ export const Map = ({ points, activePlace, className, setActivePlace }: MapProps
           />
         ))}
         <PanRestorer hasActiveGeoPoint={!!activePlace} />
+        {showControls && <Controls />}
       </MapContainer>
     </>
   )
