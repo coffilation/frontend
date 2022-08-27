@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer } from 'react-leaflet'
-import React, { useMemo } from 'react'
+import React  from 'react'
 
 import styles from './map.module.scss'
 import { Point } from 'widgets/map/ui/point/point'
@@ -10,22 +10,17 @@ import { PanRestorer } from 'widgets/map/ui/pan-restorer/pan-restorer'
 interface MapProps {
   className?: string
   points?: Pick<Components.Schemas.Place, `osmId` | `latitude` | `longitude`>[]
-  activeGeoPointIndex: number | undefined
+  activeGeoPoint: GeoPoint | undefined
 }
 
-export const Map = ({ points, activeGeoPointIndex, className }: MapProps) => {
-  const activePoint = useMemo(() => {
-    if (activeGeoPointIndex !== undefined) {
-      return points?.[activeGeoPointIndex]
-    }
-  }, [activeGeoPointIndex, points])
+export const Map = ({ points, activeGeoPoint, className }: MapProps) => {
 
   return (
     <>
       <MapContainer
         center={
-          activePoint
-            ? [activePoint.latitude, activePoint.longitude]
+          activeGeoPoint
+            ? [parseFloat(activeGeoPoint.lat), parseFloat(activeGeoPoint.lon)]
             : [59.9375, 30.308611]
         }
         zoom={13}
@@ -41,10 +36,10 @@ export const Map = ({ points, activeGeoPointIndex, className }: MapProps) => {
             key={point.osmId}
             latitude={point.latitude}
             longitude={point.longitude}
-            isSelected={point.osmId === activePoint?.osmId}
+            isSelected={point.osmId === activeGeoPoint?.osm_id}
           />
         ))}
-        <PanRestorer hasActiveGeoPoint={activeGeoPointIndex !== undefined} />
+        <PanRestorer hasActiveGeoPoint={!!activeGeoPoint} />
       </MapContainer>
     </>
   )

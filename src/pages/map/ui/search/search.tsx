@@ -5,18 +5,19 @@ import { useBoolean } from 'shared/hooks'
 
 import styles from './search.module.scss'
 import { Dispatch, SetStateAction, useCallback } from 'react'
+import { GeoPoint } from 'entities/geo-points/lib'
 
 interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
-  setActiveGeoPointIndex: Dispatch<SetStateAction<number | undefined>>
-  hasActiveGeoPointIndex: boolean
+  setActiveGeoPoint: Dispatch<SetStateAction<GeoPoint | undefined>>
+  hasActiveGeoPoint: boolean
 }
 
 export const Search = ({
   handleSearch,
   isValidating,
   geoPoints,
-  setActiveGeoPointIndex,
-  hasActiveGeoPointIndex,
+  setActiveGeoPoint,
+  hasActiveGeoPoint,
   clearGeoPoints,
 }: SearchProps) => {
   const {
@@ -26,17 +27,17 @@ export const Search = ({
   } = useBoolean()
 
   const getHandleClick = useCallback(
-    (pointIndex: number) => () => {
-      setActiveGeoPointIndex(pointIndex)
+    (geoPoint: GeoPoint) => () => {
+      setActiveGeoPoint(geoPoint)
       hideBackdrop()
     },
-    [hideBackdrop, setActiveGeoPointIndex]
+    [hideBackdrop, setActiveGeoPoint]
   )
 
   const cancelSearch = useCallback(() => {
     clearGeoPoints()
-    setActiveGeoPointIndex(undefined)
-  }, [clearGeoPoints, setActiveGeoPointIndex])
+    setActiveGeoPoint(undefined)
+  }, [clearGeoPoints, setActiveGeoPoint])
 
   return (
     <>
@@ -46,12 +47,12 @@ export const Search = ({
       <div className={styles.searchWrapper}>
         <Button
           className={
-            isBackdropVisible || hasActiveGeoPointIndex
+            isBackdropVisible || hasActiveGeoPoint
               ? styles.backButton
               : styles.backButtonHidden
           }
           onClick={
-            hasActiveGeoPointIndex && !isBackdropVisible
+            hasActiveGeoPoint && !isBackdropVisible
               ? cancelSearch
               : hideBackdrop
           }
@@ -66,11 +67,11 @@ export const Search = ({
       </div>
       {isBackdropVisible && !isValidating && (
         <List>
-          {geoPoints?.map((geoPoint, index) => (
+          {geoPoints?.map((geoPoint) => (
             <List.Item
               className={styles.listItem}
               key={geoPoint.osm_id}
-              onClick={getHandleClick(index)}
+              onClick={getHandleClick(geoPoint)}
             >
               <Typography.Paragraph className={styles.listItemTitle}>
                 {geoPoint.namedetails.name}
