@@ -9,27 +9,23 @@ import { PanRestorer } from 'widgets/map/ui/pan-restorer/pan-restorer'
 
 interface MapProps {
   className?: string
-  geoPoints?: GeoPoint[]
+  points?: Pick<Components.Schemas.Place, `osmId` | `latitude` | `longitude`>[]
   activeGeoPointIndex: number | undefined
 }
 
-export const Map = ({
-  geoPoints,
-  activeGeoPointIndex,
-  className,
-}: MapProps) => {
-  const activeGeoPoint = useMemo(() => {
+export const Map = ({ points, activeGeoPointIndex, className }: MapProps) => {
+  const activePoint = useMemo(() => {
     if (activeGeoPointIndex !== undefined) {
-      return geoPoints?.[activeGeoPointIndex]
+      return points?.[activeGeoPointIndex]
     }
-  }, [activeGeoPointIndex, geoPoints])
+  }, [activeGeoPointIndex, points])
 
   return (
     <>
       <MapContainer
         center={
-          activeGeoPoint?.lat && activeGeoPoint?.lon
-            ? [parseFloat(activeGeoPoint?.lat), parseFloat(activeGeoPoint?.lon)]
+          activePoint
+            ? [activePoint.latitude, activePoint.longitude]
             : [59.9375, 30.308611]
         }
         zoom={13}
@@ -40,12 +36,12 @@ export const Map = ({
         <TileLayer
           url={`https://{s}.tile.thunderforest.com/atlas/{z}/{x}/{y}@2x.png?apikey=${process.env.REACT_APP_MAPS_API_KEY}`}
         />
-        {geoPoints?.map((geoPoint) => (
+        {points?.map((point) => (
           <Point
-            key={geoPoint.osm_id}
-            latitude={parseFloat(geoPoint.lat)}
-            longitude={parseFloat(geoPoint.lon)}
-            isSelected={geoPoint.osm_id === activeGeoPoint?.osm_id}
+            key={point.osmId}
+            latitude={point.latitude}
+            longitude={point.longitude}
+            isSelected={point.osmId === activePoint?.osmId}
           />
         ))}
         <PanRestorer hasActiveGeoPoint={activeGeoPointIndex !== undefined} />

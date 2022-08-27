@@ -3,7 +3,7 @@ import { Search } from '../search'
 
 import styles from './map.module.scss'
 import { useGeoPointsSearch } from 'pages/map/lib'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Place } from 'widgets/place/ui/place'
 
 export const MapPage = () => {
@@ -13,12 +13,20 @@ export const MapPage = () => {
 
   const hasActiveGeoPointIndex = activeGeoPointIndex !== undefined
 
+  const points = useMemo(() => {
+    return geoPoints?.map((point) => ({
+      osmId: point.osm_id,
+      latitude: parseFloat(point.lat),
+      longitude: parseFloat(point.lon),
+    }))
+  }, [geoPoints])
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.mapWrapper}>
         <Map
           className={styles.map}
-          geoPoints={geoPoints}
+          points={points}
           activeGeoPointIndex={activeGeoPointIndex}
         />
       </div>
