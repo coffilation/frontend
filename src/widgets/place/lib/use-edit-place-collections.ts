@@ -1,5 +1,7 @@
 import { postPlace, putPlaceCollections, usePlace } from 'entities/places/lib'
 import { useCallback } from 'react'
+import { mutate } from 'swr'
+import { routes } from 'shared/api'
 
 export const useEditPlaceCollections = (
   place: Components.Schemas.CreatePlaceDto | undefined
@@ -19,7 +21,12 @@ export const useEditPlaceCollections = (
       }
 
       if (placeError?.response?.status === 404) {
-        await postPlace(place)
+        const newPlace = (await postPlace(place)).data
+        await mutate<Components.Schemas.Place[]>(
+          routes.places,
+          (places) => (places ? [...places, newPlace] : undefined),
+          false
+        )
       }
 
       await putPlaceCollections(place.osmId, placeCollectionIds)
