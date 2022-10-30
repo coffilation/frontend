@@ -1,59 +1,65 @@
 import { Map } from 'widgets/map/ui/map/map'
+import { Map as LeafletMap } from 'leaflet'
 import { Search } from '../search'
 
 import styles from './map.module.scss'
 import { useGeoPointsSearch } from 'pages/map/lib'
-import { ComponentProps, useMemo, useState } from 'react'
-import { Place } from 'widgets/place/ui/place'
-import { usePlaces } from 'entities/places/lib'
-import { geoPointToPlace } from 'pages/map/lib/geo-point-to-place'
-import { Filters } from 'pages/map/ui/filters'
+import { useCallback, useMemo, useState } from 'react'
+import { Place } from '../place'
+import { BottomSheet } from 'pages/map/ui/bottom-sheet'
+import { Places } from '../places'
+import { PlacePoints } from 'pages/map/ui/place-points'
 
 export const MapPage = () => {
   const { geoPoints, handleSearch, isValidating, clearGeoPoints } =
     useGeoPointsSearch()
-  const [activePlace, setActivePlace] =
-    useState<Components.Schemas.CreatePlaceDto>()
+  const [activePlaceIndex, setActivePlaceIndex] = useState<number>()
+  const [expandActivePlace, setExpandActivePlace] = useState(false)
 
-  const { data: places } = usePlaces()
+  const [map, setMap] = useState<LeafletMap>()
 
-  const points = useMemo<ComponentProps<typeof Map>['points']>(() => {
-    let points: ComponentProps<typeof Map>['points'] = []
+  const activePlace = useMemo(
+    () =>
+      activePlaceIndex !== undefined
+        ? geoPoints?.[activePlaceIndex]
+        : undefined,
+    [activePlaceIndex, geoPoints],
+  )
 
-    if (places) {
-      points = points.concat(places)
-    }
-
-    if (geoPoints) {
-      points = points.concat(geoPoints.map(geoPointToPlace))
-    }
-
-    return points
-  }, [geoPoints, places])
+  const onDismiss = useCallback(() => setExpandActivePlace(false), [])
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.mapWrapper}>
-        <Map
-          showControls
-          className={styles.map}
-          points={points}
-          activePlace={activePlace}
-          setActivePlace={setActivePlace}
+        <Map showControls className={styles.map} setMap={setMap}>
+          <PlacePoints
+            activePlaceIndex={activePlaceIndex}
+            places={geoPoints}
+            setActivePlaceIndex={setActivePlaceIndex}
+          />
+        </Map>
+        <BottomSheet open={activePlaceIndex === undefined}>
+          <Search
+            map={map}
+            handleSearch={handleSearch}
+            geoPoints={geoPoints}
+            isValidating={isValidating}
+            setActivePlaceIndex={setActivePlaceIndex}
+            clearGeoPoints={clearGeoPoints}
+          />
+        </BottomSheet>
+        <Places
+          visible={activePlaceIndex !== undefined && !expandActivePlace}
+          map={map}
+          activePlaceIndex={activePlaceIndex}
+          places={geoPoints}
+          setActivePlaceIndex={setActivePlaceIndex}
+          setExpandActivePlace={setExpandActivePlace}
         />
+        <BottomSheet open={expandActivePlace} onDismiss={onDismiss}>
+          <Place place={activePlace} />
+        </BottomSheet>
       </div>
-      {!!activePlace && <Place place={activePlace} />}
-      <div className={styles.searchWrapper}>
-        <Search
-          handleSearch={handleSearch}
-          geoPoints={geoPoints}
-          isValidating={isValidating}
-          setActivePlace={setActivePlace}
-          hasActivePlace={!!activePlace}
-          clearGeoPoints={clearGeoPoints}
-        />
-      </div>
-      {!activePlace && <Filters />}
     </div>
   )
 }

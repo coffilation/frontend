@@ -1,0 +1,38 @@
+.wrapper {
+  position: fixed;
+  z-index: 1000;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  touch-action: none;
+  transition: transform 0.1s;
+}
+
+.wrapperEnter {
+  transition: none;
+  transform: translateY(100%) !important;
+}
+
+.wrapperEnterActive {
+  transition: transform 0.3s;
+  transform: translateY(0) !important;
+}
+
+.wrapperExitActive {
+  transition: transform 0.1s;
+  transform: translateY(100%) !important;
+}
+
+.list {
+  padding: 24px;
+}
+
+.paragraph {
+  margin-bottom: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+}

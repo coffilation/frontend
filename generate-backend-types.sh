@@ -3,5 +3,5 @@
 OUTPUT="./src/backend.d.ts"
 source .env
 
-dtsgen --out "$OUTPUT" --url "$REACT_APP_BACKEND_URL/json"
+dtsgen --out "$OUTPUT" --url "$REACT_APP_BACKEND_URL/-json"
 prettier --write "$OUTPUT"

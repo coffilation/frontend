@@ -1,17 +1,17 @@
-import { api, routes } from 'shared/api'
+import { backendApi, backendRoutes } from 'shared/api'
 
 export const postAuthLogin = async (
   data: Paths.AuthControllerLogin.RequestBody
 ) => {
   const response = (
-    await api.post<Paths.AuthControllerLogin.Responses.$200>(
-      routes.authLogin,
+    await backendApi.post<Paths.AuthControllerLogin.Responses.$200>(
+      backendRoutes.authLogin,
       data
     )
   ).data
 
   localStorage.setItem(`refresh`, response.refresh)
-  api.defaults.headers.common.Authorization = `Bearer ${response.access}`
+  backendApi.defaults.headers.common.Authorization = `Bearer ${response.access}`
 
   return response
 }
@@ -20,14 +20,14 @@ export const postAuthRefresh = async (
   data: Paths.AuthControllerRefresh.RequestBody
 ) => {
   const response = (
-    await api.post<Paths.AuthControllerRefresh.Responses.$200>(
-      routes.authRefresh,
+    await backendApi.post<Paths.AuthControllerRefresh.Responses.$200>(
+      backendRoutes.authRefresh,
       data
     )
   ).data
 
   localStorage.setItem(`refresh`, response.refresh)
-  api.defaults.headers.common.Authorization = `Bearer ${response.access}`
+  backendApi.defaults.headers.common.Authorization = `Bearer ${response.access}`
 
   return response
 }

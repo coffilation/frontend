@@ -1,6 +1,6 @@
 import { Button, Checkbox, Form, Modal } from 'antd'
 import { ComponentProps, useMemo } from 'react'
-import { useCollections } from 'entities/collections/lib'
+// import { useCollections } from 'entities/collections/lib'
 
 import styles from './add-to-collection-modal.module.scss'
 import { useEditPlaceCollections } from 'widgets/place/lib/use-edit-place-collections'
@@ -17,27 +17,27 @@ export const AddToCollectionModal = ({
   placeCollections,
   place,
 }: AddToCollectionModalProps) => {
-  const { data: collections } = useCollections()
+  // const { data: collections } = useCollections()
   const { handleEditPlaceCollections } = useEditPlaceCollections(place)
 
   const [form] = Form.useForm()
 
-  const checkboxes = useMemo(
-    () =>
-      collections?.map((collection) => (
-        <Checkbox
-          className={styles.checkbox}
-          key={collection.id}
-          value={collection.id}
-          defaultChecked={placeCollections.some(
-            (placeCollection) => placeCollection.id === collection.id
-          )}
-        >
-          {collection.name}
-        </Checkbox>
-      )),
-    [collections, placeCollections]
-  )
+  // const checkboxes = useMemo(
+  //   () =>
+  //     collections?.map((collection) => (
+  //       <Checkbox
+  //         className={styles.checkbox}
+  //         key={collection.id}
+  //         value={collection.id}
+  //         defaultChecked={placeCollections.some(
+  //           (placeCollection) => placeCollection.id === collection.id
+  //         )}
+  //       >
+  //         {collection.name}
+  //       </Checkbox>
+  //     )),
+  //   [collections, placeCollections]
+  // )
 
   return (
     <Modal
@@ -53,7 +53,7 @@ export const AddToCollectionModal = ({
       <Form onFinish={handleEditPlaceCollections} form={form}>
         <Form.Item name='collectionIds'>
           <Checkbox.Group className={styles.wrapper}>
-            {checkboxes}
+            {/*{checkboxes}*/}
           </Checkbox.Group>
         </Form.Item>
       </Form>

@@ -1,96 +1,64 @@
-import { Button, Input, List, Typography } from 'antd'
-import { ArrowLeftOutlined } from '@ant-design/icons'
+import { Input, List, Typography } from 'antd'
 import { useGeoPointsSearch } from '../../lib'
-import { useBoolean } from 'shared/hooks'
 
 import styles from './search.module.scss'
 import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
-import { GeoPoint } from 'entities/geo-points/lib'
-import { geoPointToPlace } from 'pages/map/lib/geo-point-to-place'
+import { Map as LeafletMap } from 'leaflet'
 
 interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
-  setActivePlace: Dispatch<
-    SetStateAction<Components.Schemas.CreatePlaceDto | undefined>
-  >
-  hasActivePlace: boolean
+  setActivePlaceIndex: Dispatch<SetStateAction<number | undefined>>
+  map: LeafletMap | undefined
 }
 
 export const Search = ({
   handleSearch,
   isValidating,
   geoPoints,
-  setActivePlace,
-  hasActivePlace,
-  clearGeoPoints,
+  setActivePlaceIndex,
+  map,
 }: SearchProps) => {
-  const {
-    value: isBackdropVisible,
-    setIsTrue: showBackdrop,
-    setIsFalse: hideBackdrop,
-  } = useBoolean()
-
   const getHandleClick = useCallback(
-    (geoPoint: GeoPoint) => () => {
-      setActivePlace(geoPointToPlace(geoPoint))
-      hideBackdrop()
+    (index: number) => () => {
+      setActivePlaceIndex(index)
     },
-    [hideBackdrop, setActivePlace]
+    [setActivePlaceIndex],
   )
 
-  const cancelSearch = useCallback(() => {
-    clearGeoPoints()
-    setActivePlace(undefined)
-  }, [clearGeoPoints, setActivePlace])
+  const handleSearchClick = useCallback(
+    (value: string) => {
+      if (!map) {
+        return
+      }
 
-  useEffect(() => {
-    if (geoPoints) {
-      showBackdrop()
-    }
-  }, [geoPoints, showBackdrop])
+      const bounds = map.getBounds()
+
+      handleSearch(value, [
+        bounds.getWest(),
+        bounds.getNorth(),
+        bounds.getEast(),
+        bounds.getSouth(),
+      ])
+    },
+    [map, handleSearch],
+  )
 
   return (
     <>
-      <div
-        className={isBackdropVisible ? styles.backdrop : styles.backdropHidden}
-      />
       <div className={styles.searchWrapper}>
-        <Button
-          className={
-            isBackdropVisible || hasActivePlace
-              ? styles.backButton
-              : styles.backButtonHidden
-          }
-          onClick={
-            hasActivePlace && !isBackdropVisible ? cancelSearch : hideBackdrop
-          }
-        >
-          <ArrowLeftOutlined />
-        </Button>
-        <Input.Search
-          loading={isValidating}
-          onSearch={handleSearch}
-          onFocus={geoPoints && showBackdrop}
-        />
+        <Input.Search loading={isValidating} onSearch={handleSearchClick} />
       </div>
-      {isBackdropVisible && !isValidating && (
-        <List>
-          {geoPoints?.map((geoPoint) => (
+      {geoPoints && !isValidating && (
+        <List className={styles.list}>
+          {geoPoints?.map((geoPoint, index) => (
             <List.Item
               className={styles.listItem}
-              key={geoPoint.osm_id}
-              onClick={getHandleClick(geoPoint)}
+              key={geoPoint.osmId}
+              onClick={getHandleClick(index)}
             >
               <Typography.Paragraph className={styles.listItemTitle}>
-                {geoPoint.namedetails.name}
+                {geoPoint.name}
               </Typography.Paragraph>
-              {[
-                geoPoint.address.road,
-                geoPoint.address.city ||
-                  geoPoint.address.town ||
-                  geoPoint.address.state,
-              ]
-                .filter(Boolean)
-                .join(`, `)}
+              {geoPoint.displayName}
             </List.Item>
           ))}
         </List>
