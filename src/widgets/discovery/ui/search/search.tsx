@@ -1,27 +1,29 @@
-import { Input, List, Typography } from 'antd'
+import { Avatar, Input, List, Typography } from 'antd'
 import { useGeoPointsSearch } from '../../lib'
 
 import styles from './search.module.scss'
-import { Dispatch, SetStateAction, useCallback, useEffect } from 'react'
-import { Map as LeafletMap } from 'leaflet'
+import { Dispatch, SetStateAction, useCallback } from 'react'
+import { UserOutlined } from '@ant-design/icons'
+import { useMapContext } from 'features/map-context/lib'
 
-interface SearchProps extends ReturnType<typeof useGeoPointsSearch> {
-  setActivePlaceIndex: Dispatch<SetStateAction<number | undefined>>
-  map: LeafletMap | undefined
+interface SearchProps
+  extends Omit<ReturnType<typeof useGeoPointsSearch>, `query`> {
+  setActivePlaceOsmId: Dispatch<SetStateAction<number | undefined>>
 }
 
 export const Search = ({
   handleSearch,
   isValidating,
   geoPoints,
-  setActivePlaceIndex,
-  map,
+  setActivePlaceOsmId,
 }: SearchProps) => {
+  const map = useMapContext((value) => value.map)
+
   const getHandleClick = useCallback(
-    (index: number) => () => {
-      setActivePlaceIndex(index)
+    (osmId: number) => () => {
+      setActivePlaceOsmId(osmId)
     },
-    [setActivePlaceIndex],
+    [setActivePlaceOsmId],
   )
 
   const handleSearchClick = useCallback(
@@ -46,14 +48,15 @@ export const Search = ({
     <>
       <div className={styles.searchWrapper}>
         <Input.Search loading={isValidating} onSearch={handleSearchClick} />
+        <Avatar icon={<UserOutlined />} size='large' shape='square' />
       </div>
       {geoPoints && !isValidating && (
         <List className={styles.list}>
-          {geoPoints?.map((geoPoint, index) => (
+          {geoPoints?.map((geoPoint) => (
             <List.Item
               className={styles.listItem}
               key={geoPoint.osmId}
-              onClick={getHandleClick(index)}
+              onClick={getHandleClick(geoPoint.osmId)}
             >
               <Typography.Paragraph className={styles.listItemTitle}>
                 {geoPoint.name}

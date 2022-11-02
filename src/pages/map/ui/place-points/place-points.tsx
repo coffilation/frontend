@@ -4,9 +4,9 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import { ReactComponent as LocationIcon } from '../../assets/icnLocation.svg'
 import styles from './place-points.module.scss'
 import { Dispatch, SetStateAction } from 'react'
+import {useMapContext} from "features/map-context/lib";
 
 interface PlacePointsProps {
-  places?: Components.Schemas.Place[]
   activePlaceIndex?: number
   setActivePlaceIndex: Dispatch<SetStateAction<number | undefined>>
 }
@@ -26,10 +26,11 @@ const iconActive = divIcon({
 })
 
 export const PlacePoints = ({
-  places,
   activePlaceIndex,
   setActivePlaceIndex,
 }: PlacePointsProps) => {
+  const [places] = useMapContext((contextValue) => [contextValue.places])
+
   return (
     <>
       {places?.map((place, index) => (

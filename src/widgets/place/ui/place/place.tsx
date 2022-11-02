@@ -1,25 +1,37 @@
 import { Rate, Typography } from 'antd'
-// import { AddToCollectionModal } from 'widgets/place/ui/add-to-collection-modal/add-to-collection-modal'
 
 import styles from './place.module.scss'
 import { useBoolean } from 'shared/hooks'
-// import { usePlaceCollections } from 'entities/places/lib'
+import { BottomSheet } from 'shared/ui'
+import { useCallback } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Path } from 'shared/config'
+import { useGeoPoint } from 'entities/geo-points/lib'
 
-interface PointProps {
-  place?: Components.Schemas.CreatePlaceDto
+type PlaceQuery = {
+  osmType: string
+  osmId: string
 }
 
-export const Place = ({ place }: PointProps) => {
+export const Place = () => {
+  const { osmType, osmId } = useParams<PlaceQuery>()
+  const { data: place } = useGeoPoint(osmType, osmId)
+
+  const navigate = useNavigate()
   const {
-    value: isModalVisible,
+    // value: isModalVisible,
     setIsTrue: showModal,
-    setIsFalse: hideModal,
+    // setIsFalse: hideModal,
   } = useBoolean()
 
   // const { data: placeCollections } = usePlaceCollections(place?.osmId)
 
+  const handleClosePlace = useCallback(() => {
+    navigate(Path.Map)
+  }, [navigate])
+
   return (
-    <>
+    <BottomSheet open onDismiss={handleClosePlace}>
       <div className={styles.infoWrapper}>
         <Typography.Title level={4} className={styles.blockTitle}>
           {place?.name}
@@ -51,6 +63,6 @@ export const Place = ({ place }: PointProps) => {
         </Typography.Title>
         <Rate />
       </div>
-    </>
+    </BottomSheet>
   )
 }

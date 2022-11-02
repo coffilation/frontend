@@ -1,25 +1,21 @@
-import { Map as LeafletMap } from 'leaflet'
 import { MapContainer, TileLayer } from 'react-leaflet'
-import React, { Dispatch, ReactNode, RefObject } from 'react'
+import React, { ReactNode } from 'react'
 import classNames from 'classnames'
 
 import { Controls } from 'widgets/map/ui/controls'
 
 import styles from './map.module.scss'
+import { useMapContext } from 'features/map-context/lib'
 
 interface MapProps {
   className?: string
   showControls?: boolean
-  children: ReactNode
-  setMap: Dispatch<LeafletMap>
+  children?: ReactNode
 }
 
-export const Map = ({
-  className,
-  showControls,
-  children,
-  setMap,
-}: MapProps) => {
+export const Map = ({ className, showControls, children }: MapProps) => {
+  const setMap = useMapContext((contextValue) => contextValue.setMap)
+
   return (
     <>
       <MapContainer

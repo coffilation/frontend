@@ -1,4 +1,8 @@
 .searchWrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  grid-gap: 16px;
   position: sticky;
   top: 0;
   padding: 24px;

@@ -3,7 +3,7 @@ import { useGeoPoints } from 'entities/geo-points/lib'
 
 export const useGeoPointsSearch = () => {
   const [query, setQuery] = useState<string>()
-  const [viewBox, setViewBox] = useState<[number, number, number, number]>()
+  const [viewBox, setViewBox] = useState<number[]>()
   const { data: geoPoints, isValidating } = useGeoPoints(query, viewBox)
 
   const clearGeoPoints = useCallback(() => {
@@ -11,12 +11,12 @@ export const useGeoPointsSearch = () => {
   }, [])
 
   const handleSearch = useCallback(
-    (value: string, viewBox: [number, number, number, number]) => {
+    (value: string, viewBox: number[]) => {
       setQuery(value)
       setViewBox(viewBox)
     },
     []
   )
 
-  return { handleSearch, geoPoints, isValidating, clearGeoPoints }
+  return { handleSearch, geoPoints, isValidating, clearGeoPoints, query }
 }

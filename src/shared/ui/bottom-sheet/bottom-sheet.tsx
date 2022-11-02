@@ -1,29 +1,29 @@
 import styles from './bottom-sheet.module.scss'
-import { ReactNode, useRef, useState } from 'react'
-import { useDrag } from '@use-gesture/react'
-import classNames from 'classnames'
+import { ComponentProps, ReactNode, useEffect, useState } from 'react'
 import { BottomSheet as SpringBottomSheet } from 'react-spring-bottom-sheet'
-// import { useMap } from 'react-leaflet'
-
-// enum StickingOut {
-//   Minimal = 100,
-//   Default = 300,
-// }
 
 interface BottomSheetProps {
   open: boolean
   children: ReactNode
   onDismiss?: () => void
+  onClose?: ComponentProps<typeof SpringBottomSheet>[`onSpringEnd`]
 }
 
 export const BottomSheet = ({
   children,
   open,
   onDismiss,
+  onClose,
 }: BottomSheetProps) => {
+  const [isOpen, setIsOpen] = useState(false)
+
+  useEffect(() => {
+    setIsOpen(open)
+  }, [open])
+
   return (
     <SpringBottomSheet
-      open={open}
+      open={isOpen}
       header={false}
       scrollLocking={false}
       skipInitialTransition
@@ -39,6 +39,7 @@ export const BottomSheet = ({
         maxHeight * 0.6,
         maxHeight / 4,
       ]}
+      onSpringEnd={onClose}
     >
       <div className={styles.content}>{children}</div>
     </SpringBottomSheet>
