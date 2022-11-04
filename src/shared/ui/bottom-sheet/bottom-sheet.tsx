@@ -1,114 +1,190 @@
+import { motion, useAnimation, useMotionValue } from 'framer-motion'
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+
 import styles from './bottom-sheet.module.scss'
-import { ComponentProps, ReactNode, useEffect, useState } from 'react'
-import { BottomSheet as SpringBottomSheet } from 'react-spring-bottom-sheet'
+
+const modeToOffset = {
+  small: 0.75,
+  medium: 0.5,
+  large: 1,
+}
 
 interface BottomSheetProps {
-  open: boolean
-  children: ReactNode
-  onDismiss?: () => void
-  onClose?: ComponentProps<typeof SpringBottomSheet>[`onSpringEnd`]
+  closeable?: boolean
+  children?: ReactNode
+  mode?: `small` | `medium` | `large`
+  open?: boolean
+  onClose?: () => void
 }
 
 export const BottomSheet = ({
+  closeable,
   children,
-  open,
-  onDismiss,
+  open = false,
+  mode = `medium`,
   onClose,
 }: BottomSheetProps) => {
-  const [isOpen, setIsOpen] = useState(false)
+  const sheetRef = useRef<HTMLDivElement>(null)
+  const controls = useAnimation()
+  const y = useMotionValue(0)
+  const touchActive = useRef(false)
+  const [scrollEnabled, setScrollEnabled] = useState(false)
+  const touchY = useRef<number>()
+  const directionRef = useRef<`up` | `down`>()
 
-  useEffect(() => {
-    setIsOpen(open)
-  }, [open])
+  const breakpoints = useMemo(() => {
+    const breakpoints = [0, 0.5, 0.75]
 
-  return (
-    <SpringBottomSheet
-      open={isOpen}
-      header={false}
-      scrollLocking={false}
-      skipInitialTransition
-      className={styles.wrapper}
-      expandOnContentDrag
-      // @ts-ignore
-      style={{ '--rsbs-overlay-rounded': `2px` }}
-      blocking={false}
-      onDismiss={onDismiss}
-      defaultSnap={({ maxHeight }) => maxHeight / 2}
-      snapPoints={({ maxHeight }) => [
-        maxHeight,
-        maxHeight * 0.6,
-        maxHeight / 4,
-      ]}
-      onSpringEnd={onClose}
-    >
-      <div className={styles.content}>{children}</div>
-    </SpringBottomSheet>
+    if (closeable) {
+      breakpoints.push(1)
+    }
+
+    return breakpoints
+  }, [closeable])
+
+  const handleAnimate = useCallback(
+    async (y: number) => {
+      await controls.start(
+        {
+          y,
+        },
+        { type: `spring`, bounce: 0, velocity: 2 },
+      )
+    },
+    [controls],
   )
 
-  // const map = useMap()
-  //
-  // const [stickingOut, setStickingOut] = useState<number>(StickingOut.Default)
-  // const [isDragging, setIsDragging] = useState(false)
-  // const [isScrolling, setIsScrolling] = useState(false)
-  // const draggableRef = useRef<HTMLDivElement>(null)
-  //
-  // const bind = useDrag(
-  //   ({ delta: [, deltaY], direction: [, directionY], down, ...state }) => {
-  //     console.log(state)
-  //     setStickingOut((stickingOutPrevious) => {
-  //       if (!draggableRef.current?.parentElement) {
-  //         return stickingOutPrevious
-  //       }
-  //
-  //       setIsDragging(down)
-  //
-  //       const expectedStickingOut = stickingOutPrevious - deltaY
-  //       const parentHeight = draggableRef.current.parentElement.offsetHeight + 1
-  //
-  //       if (
-  //         (directionY === -1 && stickingOut === parentHeight) ||
-  //         draggableRef.current.scrollTop > 0
-  //       ) {
-  //         setIsScrolling(true)
-  //       } else {
-  //         setIsScrolling(false)
-  //       }
-  //
-  //       if (down) {
-  //         return Math.max(
-  //           StickingOut.Minimal,
-  //           Math.min(parentHeight, expectedStickingOut),
-  //         )
-  //       } else {
-  //         const stickingOutBreakpoints = [
-  //           StickingOut.Minimal,
-  //           StickingOut.Default,
-  //           parentHeight,
-  //         ]
-  //
-  //         return stickingOutBreakpoints.reduce((prev, curr) =>
-  //           Math.abs(curr - expectedStickingOut) <
-  //           Math.abs(prev - expectedStickingOut)
-  //             ? curr
-  //             : prev,
-  //         )
-  //       }
-  //     })
-  //   },
-  // )
-  //
-  // return (
-  //   <div
-  //     ref={draggableRef}
-  //     className={classNames(
-  //       styles.wrapper,
-  //       isDragging && styles.wrapperDragging,
-  //       isScrolling && styles.wrapperScrolling,
-  //     )}
-  //     style={{ transform: `translateY(calc(100% - ${stickingOut}px))` }}
-  //   >
-  //     <div {...(isScrolling ? {} : bind())}>drag there</div>
-  //     {children}
-  //   </div>
-  // )
+  const handleMouseDown = useCallback(
+    (event: React.TouchEvent<HTMLDivElement>) => {
+      touchActive.current = true
+      touchY.current = event.touches[0].clientY
+    },
+    [],
+  )
+
+  const handleMouseMove = useCallback(
+    (event: TouchEvent) => {
+      if (!scrollEnabled && event.cancelable) {
+        event.preventDefault()
+      }
+
+      const touch = event.touches[0]
+
+      if (
+        !touch ||
+        !touchActive.current ||
+        touchY.current === undefined ||
+        !sheetRef.current
+      ) {
+        return
+      }
+
+      if (touchY.current === 0) {
+        directionRef.current = undefined
+      } else {
+        directionRef.current =
+          touchY.current - touch.clientY > 0 ? `up` : `down`
+      }
+
+      const isSheetScrolled = sheetRef.current.scrollTop > 0
+
+      const yPrev = y.get()
+      const yNext =
+        isSheetScrolled || !event.cancelable
+          ? 0
+          : Math.max(0, yPrev - (touchY.current - touch.clientY))
+
+      y.set(yNext)
+
+      if (yNext === 0 || isSheetScrolled) {
+        setScrollEnabled(true)
+      } else {
+        setScrollEnabled(false)
+      }
+
+      touchY.current = touch.clientY
+    },
+    [scrollEnabled, y],
+  )
+
+  const handleTouchEnd = useCallback(async () => {
+    if (!sheetRef.current || !touchY.current) {
+      return
+    }
+
+    const maxOffset = sheetRef.current.offsetHeight
+
+    const yValue = y.get()
+    const closest = breakpoints
+      .map((breakpoint) => breakpoint * maxOffset)
+      .reduce((prev, curr) => {
+        if (directionRef.current === `up`) {
+          return prev <= yValue ? prev : curr
+        }
+
+        if (directionRef.current === `down`) {
+          return prev >= yValue ? prev : curr
+        }
+
+        return Math.abs(curr - yValue) < Math.abs(prev - yValue) ? curr : prev
+      })
+
+    touchActive.current = false
+    touchY.current = undefined
+
+    await handleAnimate(closest)
+
+    if (onClose && closest === sheetRef.current.offsetHeight) {
+      onClose()
+    }
+  }, [breakpoints, handleAnimate, onClose, y])
+
+  useEffect(() => {
+    const sheet = sheetRef.current
+
+    if (!sheet) {
+      return
+    }
+
+    sheet.addEventListener(`touchmove`, handleMouseMove, { passive: false })
+
+    return () => sheet.removeEventListener(`touchmove`, handleMouseMove)
+  }, [handleMouseMove])
+
+  useEffect(() => {
+    if (!sheetRef.current) {
+      return
+    }
+
+    const offsetValue = open
+      ? sheetRef.current.offsetHeight * modeToOffset[mode]
+      : sheetRef.current.offsetHeight
+
+    y.set(sheetRef.current.offsetHeight)
+    handleAnimate(offsetValue).then()
+
+    if (onClose && offsetValue === sheetRef.current.offsetHeight) {
+      onClose()
+    }
+  }, [handleAnimate, mode, onClose, open, y])
+
+  return (
+    <motion.div
+      ref={sheetRef}
+      animate={controls}
+      style={{ y }}
+      className={styles.sheet}
+      onTouchStart={handleMouseDown}
+      onTouchEnd={handleTouchEnd}
+    >
+      {children}
+    </motion.div>
+  )
 }

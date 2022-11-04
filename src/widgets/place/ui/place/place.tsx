@@ -31,7 +31,7 @@ export const Place = () => {
   }, [navigate])
 
   return (
-    <BottomSheet open onDismiss={handleClosePlace}>
+    <BottomSheet open closeable onClose={handleClosePlace}>
       <div className={styles.infoWrapper}>
         <Typography.Title level={4} className={styles.blockTitle}>
           {place?.name}

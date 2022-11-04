@@ -1,5 +1,6 @@
 .searchWrapper {
   display: grid;
+  height: fit-content;
   grid-template-columns: 1fr auto;
   align-items: center;
   grid-gap: 16px;

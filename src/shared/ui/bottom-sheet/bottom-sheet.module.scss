@@ -1,8 +1,15 @@
-.wrapper {
+.sheet {
+  position: fixed;
+  top: 0;
+  right: -1px;
+  bottom: 0;
+  left: -1px;
   z-index: 1000;
-}
-
-.content {
-  overflow: auto;
-  height: 100%;
+  display: grid;
+  grid-gap: 40px;
+  background: white;
+  overflow-y: auto;
+  border-radius: 2px;
+  border: 1px solid #d9d9d9;
+  transform: translateY(100%);
 }
