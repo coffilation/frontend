@@ -33,7 +33,7 @@ export const BottomSheet = ({
 }: BottomSheetProps) => {
   const sheetRef = useRef<HTMLDivElement>(null)
   const controls = useAnimation()
-  const y = useMotionValue(0)
+  const y = useMotionValue<number | string>(`100%`)
   const touchActive = useRef(false)
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const touchY = useRef<number>()
@@ -76,12 +76,14 @@ export const BottomSheet = ({
       }
 
       const touch = event.touches[0]
+      const yPrev = y.get()
 
       if (
         !touch ||
         !touchActive.current ||
         touchY.current === undefined ||
-        !sheetRef.current
+        !sheetRef.current ||
+        typeof yPrev === `string`
       ) {
         return
       }
@@ -95,7 +97,6 @@ export const BottomSheet = ({
 
       const isSheetScrolled = sheetRef.current.scrollTop > 0
 
-      const yPrev = y.get()
       const yNext =
         isSheetScrolled || !event.cancelable
           ? 0
@@ -115,13 +116,14 @@ export const BottomSheet = ({
   )
 
   const handleTouchEnd = useCallback(async () => {
-    if (!sheetRef.current || !touchY.current) {
+    const yValue = y.get()
+
+    if (!sheetRef.current || !touchY.current || typeof yValue === `string`) {
       return
     }
 
     const maxOffset = sheetRef.current.offsetHeight
 
-    const yValue = y.get()
     const closest = breakpoints
       .map((breakpoint) => breakpoint * maxOffset)
       .reduce((prev, curr) => {
