@@ -65,8 +65,9 @@ export const BottomSheet = ({
     (event: React.TouchEvent<HTMLDivElement>) => {
       touchActive.current = true
       touchY.current = event.touches[0].clientY
+      controls.stop()
     },
-    [],
+    [controls],
   )
 
   const handleMouseMove = useCallback(
