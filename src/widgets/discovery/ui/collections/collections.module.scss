@@ -1,0 +1,41 @@
+.wrapper {
+}
+
+.title.title {
+  line-height: 100%;
+  margin-bottom: 16px;
+}
+
+.list {
+  touch-action: pan-x;
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  overflow-x: auto;
+  margin: 0 -24px;
+  padding: 0 24px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.item {
+  flex: 0 0 90px;
+  height: 120px;
+  border-radius: 8px;
+  background: linear-gradient(45deg, #bfbfbf, #f0f0f0);
+  color: white;
+  padding: 8px;
+  display: flex;
+  align-items: flex-end;
+  line-height: 1.2;
+}
+
+.itemContent {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

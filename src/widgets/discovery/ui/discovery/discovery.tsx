@@ -5,6 +5,8 @@ import { useGeoPointsSearch } from '../../lib'
 import { generatePath, useNavigate } from 'react-router-dom'
 import { Path } from 'shared/config'
 import { useMapContext } from 'features/map-context/lib'
+import { Collections } from '../collections'
+import styles from './discovery.module.scss'
 
 export const Discovery = () => {
   const navigate = useNavigate()
@@ -35,6 +37,9 @@ export const Discovery = () => {
         setActivePlaceOsmId={setActivePlaceOsmId}
         clearGeoPoints={clearGeoPoints}
       />
+      <div className={styles.content}>
+        <Collections />
+      </div>
     </BottomSheet>
   )
 }
