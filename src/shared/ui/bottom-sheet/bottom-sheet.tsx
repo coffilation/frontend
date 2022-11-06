@@ -1,7 +1,10 @@
 import { motion, useAnimation, useMotionValue } from 'framer-motion'
 import React, {
+  createContext,
+  MutableRefObject,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -14,6 +17,40 @@ const modeToOffset = {
   small: 0.75,
   medium: 0.5,
   large: 1,
+}
+
+interface ScrollableContainerProps {
+  children?: ReactNode
+}
+
+const IsExpandingPreventedContext = createContext<
+  MutableRefObject<boolean> | undefined
+>(undefined)
+
+const ScrollableContainer = ({ children }: ScrollableContainerProps) => {
+  const isExpandingPreventedRef = useContext(IsExpandingPreventedContext)
+
+  const handleTouchStart = useCallback(() => {
+    if (!isExpandingPreventedRef) {
+      return
+    }
+
+    isExpandingPreventedRef.current = true
+  }, [isExpandingPreventedRef])
+
+  const handleTouchEnd = useCallback(() => {
+    if (!isExpandingPreventedRef) {
+      return
+    }
+
+    isExpandingPreventedRef.current = false
+  }, [isExpandingPreventedRef])
+
+  return (
+    <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      {children}
+    </div>
+  )
 }
 
 interface BottomSheetProps {
@@ -38,6 +75,7 @@ export const BottomSheet = ({
   const [scrollEnabled, setScrollEnabled] = useState(false)
   const touchY = useRef<number>()
   const directionRef = useRef<`up` | `down`>()
+  const isExpandingPreventedRef = useRef(false)
 
   const breakpoints = useMemo(() => {
     const breakpoints = [0, 0.5, 0.75]
@@ -72,6 +110,10 @@ export const BottomSheet = ({
 
   const handleMouseMove = useCallback(
     (event: TouchEvent) => {
+      if (isExpandingPreventedRef.current) {
+        return
+      }
+
       if (!scrollEnabled && event.cancelable) {
         event.preventDefault()
       }
@@ -187,7 +229,11 @@ export const BottomSheet = ({
       onTouchStart={handleMouseDown}
       onTouchEnd={handleTouchEnd}
     >
-      {children}
+      <IsExpandingPreventedContext.Provider value={isExpandingPreventedRef}>
+        {children}
+      </IsExpandingPreventedContext.Provider>
     </motion.div>
   )
 }
+
+BottomSheet.ScrollableContainer = ScrollableContainer
