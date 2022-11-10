@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { SWRConfig } from 'swr'
 
-import { App } from 'app'
+import { App } from 'app/ui'
 import { backendSWRFetcher } from 'shared/api'
 import { ConfigProvider } from 'antd'
 import { UserAuthProvider } from 'features/user-auth-context/ui'

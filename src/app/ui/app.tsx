@@ -4,13 +4,10 @@ import 'swiper/css'
 import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Path } from 'shared/config'
-import { MapPage } from 'pages/map'
-import { Discovery } from 'widgets/discovery/ui'
-import { Places } from 'widgets/places/ui'
-import { Place } from 'widgets/place/ui'
-import { Login } from 'pages/login/ui'
-import { ProfileRedirect } from 'features/profile-redirect/ui'
-import { Profile } from 'pages/profile/ui'
+
+import { MapPage, Profile, Collections, Login } from './pages'
+import { Discovery, Places, Place } from './widgets'
+import { ProfileRedirect } from './features'
 
 export const App = () => {
   return (
@@ -24,6 +21,7 @@ export const App = () => {
         <Route path={Path.Profile} element={<Profile />} />
         <Route path={Path.ProfileLogin} element={<Login />} />
       </Route>
+      <Route path={Path.Collections} element={<Collections />} />
       <Route path='*' element={<Navigate to={Path.Map} replace />} />
     </Routes>
   )

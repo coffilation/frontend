@@ -1,6 +1,6 @@
 export enum Path {
-  // Collections = `/collections`,
-  // Collection = `/collections/:collectionId`,
+  Collections = `/collections`,
+  Collection = `/collections/:collectionId`,
   // User = `/user/:username`,
   ProfileLogin = `/profile/login`,
   ProfileOwn = `/profile`,
