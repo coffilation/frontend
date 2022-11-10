@@ -7,5 +7,5 @@ export enum Path {
   Profile = `/profile/:username`,
   Map = `/map`,
   MapPlaces = `/map/places`,
-  MapPlace = `/map/place/:osmType/:osmId`,
+  MapPlace = `/map/:osmType/:osmId`,
 }

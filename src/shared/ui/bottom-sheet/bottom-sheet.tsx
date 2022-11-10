@@ -88,12 +88,12 @@ export const BottomSheet = ({
   }, [closeable])
 
   const handleAnimate = useCallback(
-    async (y: number) => {
+    async (y: number, duration?: number) => {
       await controls.start(
         {
           y,
         },
-        { type: `spring`, bounce: 0, velocity: 2 },
+        { type: `spring`, bounce: 0, velocity: 2, duration },
       )
     },
     [controls],
@@ -212,13 +212,12 @@ export const BottomSheet = ({
       ? sheetRef.current.offsetHeight * modeToOffset[mode]
       : sheetRef.current.offsetHeight
 
-    y.set(sheetRef.current.offsetHeight)
-    handleAnimate(offsetValue).then()
-
-    if (onClose && offsetValue === sheetRef.current.offsetHeight) {
-      onClose()
-    }
-  }, [handleAnimate, mode, onClose, open, y])
+    handleAnimate(offsetValue).then(() => {
+      if (onClose && offsetValue === sheetRef.current?.offsetHeight) {
+        onClose()
+      }
+    })
+  }, [handleAnimate, mode, onClose, open])
 
   return (
     <motion.div
