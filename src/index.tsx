@@ -6,7 +6,7 @@ import { SWRConfig } from 'swr'
 import { App } from 'app'
 import { backendSWRFetcher } from 'shared/api'
 import { ConfigProvider } from 'antd'
-import { AuthProvider } from 'processes/auth/ui/auth-provider'
+import { UserAuthProvider } from 'features/user-auth-context/ui'
 
 const root = ReactDOM.createRoot(document.getElementById(`root`) as HTMLElement)
 
@@ -14,10 +14,10 @@ root.render(
   <SWRConfig value={{ fetcher: backendSWRFetcher }}>
     <ConfigProvider componentSize='large'>
       <BrowserRouter>
-        <AuthProvider>
+        <UserAuthProvider>
           <App />
-        </AuthProvider>
+        </UserAuthProvider>
       </BrowserRouter>
     </ConfigProvider>
-  </SWRConfig>
+  </SWRConfig>,
 )

@@ -5,6 +5,8 @@ import styles from './search.module.scss'
 import { Dispatch, SetStateAction, useCallback } from 'react'
 import { UserOutlined } from '@ant-design/icons'
 import { useMapContext } from 'features/map-context/lib'
+import { Link } from 'react-router-dom'
+import { Path } from 'shared/config'
 
 interface SearchProps
   extends Omit<ReturnType<typeof useGeoPointsSearch>, `query`> {
@@ -48,7 +50,9 @@ export const Search = ({
     <>
       <div className={styles.searchWrapper}>
         <Input.Search loading={isValidating} onSearch={handleSearchClick} />
-        <Avatar icon={<UserOutlined />} size='large' shape='square' />
+        <Link to={Path.ProfileLogin}>
+          <Avatar icon={<UserOutlined />} size='large' shape='square' />
+        </Link>
       </div>
       {geoPoints && !isValidating && (
         <List className={styles.list}>

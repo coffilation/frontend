@@ -11,6 +11,10 @@ export const backendRoutes = {
   authRefresh: `/auth/refresh`,
 
   usersMe: `/users/me`,
+  user: (userId: Paths.UsersControllerFindOne.Parameters.Id) =>
+    `/users/${userId}`,
+  userId: (username: Paths.UsersControllerGetId.Parameters.Username) =>
+    `/users/${username}/id`,
 
   places: `/places`,
   place: (osmId: number) => `${backendRoutes.places}/${osmId}`,
