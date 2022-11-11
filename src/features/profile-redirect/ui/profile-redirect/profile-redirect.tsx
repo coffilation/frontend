@@ -23,11 +23,13 @@ export const ProfileRedirect = () => {
     }
 
     if (!isAuthorized || usersMeError) {
-      navigate(Path.ProfileLogin)
+      navigate(Path.ProfileLogin, { replace: true })
     }
 
     if (isAuthorized && usersMe) {
-      navigate(generatePath(Path.Profile, { username: usersMe.username }))
+      navigate(generatePath(Path.Profile, { username: usersMe.username }), {
+        replace: true,
+      })
     }
   }, [isAuthorized, isLoading, match, navigate, usersMe, usersMeError])
 
@@ -37,7 +39,9 @@ export const ProfileRedirect = () => {
       isAuthorized &&
       usersMe
     ) {
-      navigate(generatePath(Path.Profile, { username: usersMe.username }))
+      navigate(generatePath(Path.Profile, { username: usersMe.username }), {
+        replace: true,
+      })
     }
   }, [isAuthorized, location.pathname, navigate, usersMe])
 

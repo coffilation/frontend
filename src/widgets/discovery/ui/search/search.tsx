@@ -5,8 +5,9 @@ import styles from './search.module.scss'
 import { Dispatch, SetStateAction, useCallback } from 'react'
 import { UserOutlined } from '@ant-design/icons'
 import { useMapContext } from 'features/map-context/lib'
-import { Link } from 'react-router-dom'
+import { generatePath, Link } from 'react-router-dom'
 import { Path } from 'shared/config'
+import { useUsersMe } from 'entities/users/lib'
 
 interface SearchProps
   extends Omit<ReturnType<typeof useGeoPointsSearch>, `query`> {
@@ -20,6 +21,7 @@ export const Search = ({
   setActivePlaceOsmId,
 }: SearchProps) => {
   const map = useMapContext((value) => value.map)
+  const { data: usersMe } = useUsersMe()
 
   const getHandleClick = useCallback(
     (osmId: number) => () => {
@@ -50,8 +52,20 @@ export const Search = ({
     <>
       <div className={styles.searchWrapper}>
         <Input.Search loading={isValidating} onSearch={handleSearchClick} />
-        <Link to={Path.ProfileLogin}>
-          <Avatar icon={<UserOutlined />} size='large' shape='square' />
+        <Link
+          to={
+            usersMe
+              ? generatePath(Path.Profile, { username: usersMe.username })
+              : Path.ProfileLogin
+          }
+        >
+          <Avatar
+            icon={
+              usersMe ? usersMe.username.at(0)?.toUpperCase() : <UserOutlined />
+            }
+            size='large'
+            shape='square'
+          />
         </Link>
       </div>
       {geoPoints && !isValidating && (
