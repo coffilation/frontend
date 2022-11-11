@@ -1,5 +1,4 @@
 export enum Path {
-  Collections = `/collections`,
   Collection = `/collections/:collectionId`,
   // User = `/user/:username`,
   ProfileLogin = `/profile/login`,

@@ -5,14 +5,17 @@ import { useGeoPointsSearch } from '../../lib'
 import { generatePath, useNavigate } from 'react-router-dom'
 import { Path } from 'shared/config'
 import { useMapContext } from 'features/map-context/lib'
-import { Collections } from '../collections'
+import { PublicCollections } from '../public-collections'
 import styles from './discovery.module.scss'
+import { Collections } from 'widgets/collections/ui'
+import { useUsersMe } from 'entities/users/lib'
 
 export const Discovery = () => {
   const navigate = useNavigate()
   const setPlaces = useMapContext((contextValue) => contextValue.setPlaces)
   const { handleSearch, isValidating, geoPoints, clearGeoPoints, query } =
     useGeoPointsSearch()
+  const { data: usersMe } = useUsersMe()
 
   const [activePlaceOsmId, setActivePlaceOsmId] = useState<number>()
   const [isBottomSheetClosed, setIsBottomSheetClosed] = useState(false)
@@ -38,8 +41,9 @@ export const Discovery = () => {
         clearGeoPoints={clearGeoPoints}
       />
       <div className={styles.content}>
-        <Collections />
+        <PublicCollections />
       </div>
+      <Collections className={styles.collections} userId={usersMe?.id} />
     </BottomSheet>
   )
 }

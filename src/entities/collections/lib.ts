@@ -8,3 +8,11 @@ export const useCollections = (
     params === null ? null : [backendRoutes.collections, { params }],
   )
 }
+
+export const useCollection = (
+  collectionId: Paths.CollectionsControllerFindOne.Parameters.Id | null,
+) => {
+  return useSWR<Paths.CollectionsControllerFindOne.Responses.$200>(
+    collectionId === null ? null : backendRoutes.collection(collectionId),
+  )
+}

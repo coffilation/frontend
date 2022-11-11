@@ -5,7 +5,7 @@ import React from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { Path } from 'shared/config'
 
-import { MapPage, Profile, Collections, Login } from './pages'
+import { MapPage, Profile, Login, Collection } from './pages'
 import { Discovery, Places, Place } from './widgets'
 import { ProfileRedirect } from './features'
 
@@ -21,7 +21,7 @@ export const App = () => {
         <Route path={Path.Profile} element={<Profile />} />
         <Route path={Path.ProfileLogin} element={<Login />} />
       </Route>
-      <Route path={Path.Collections} element={<Collections />} />
+      <Route path={Path.Collection} element={<Collection />} />
       <Route path='*' element={<Navigate to={Path.Map} replace />} />
     </Routes>
   )

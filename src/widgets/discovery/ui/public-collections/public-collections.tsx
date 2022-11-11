@@ -1,11 +1,11 @@
 import { useCollections } from 'entities/collections/lib'
 import { Typography } from 'antd'
 
-import styles from './collections.module.scss'
+import styles from './public-collections.module.scss'
 import React, { useRef } from 'react'
 import { BottomSheet } from 'shared/ui'
 
-export const Collections = () => {
+export const PublicCollections = () => {
   const { data: collections } = useCollections()
   const listRef = useRef<HTMLUListElement>(null)
 
