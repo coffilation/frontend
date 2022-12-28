@@ -18,6 +18,8 @@ export const backendRoutes = {
 
   places: `/places`,
   place: (osmId: number) => `${backendRoutes.places}/${osmId}`,
+  placeByOsmData: (osmId: number, osmType: string, category: string) =>
+    `${backendRoutes.places}/${osmId}/${osmType}/${category}`,
   placeCollections: (osmId: number) =>
     `${backendRoutes.place(osmId)}/collections`,
 }

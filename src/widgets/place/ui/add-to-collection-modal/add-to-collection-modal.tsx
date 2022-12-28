@@ -8,7 +8,7 @@ import { useEditPlaceCollections } from 'widgets/place/lib/use-edit-place-collec
 interface AddToCollectionModalProps
   extends Pick<ComponentProps<typeof Modal>, `visible` | `onCancel`> {
   placeCollections: Components.Schemas.Collection[]
-  place: Components.Schemas.CreatePlaceDto | undefined
+  place: Components.Schemas.Place | undefined
 }
 
 export const AddToCollectionModal = ({

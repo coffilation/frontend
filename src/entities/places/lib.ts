@@ -1,13 +1,6 @@
 import useSWR from 'swr'
 import { backendApi, backendRoutes } from 'shared/api'
 
-export const postPlace = (data: Paths.PlacesControllerCreate.RequestBody) => {
-  return backendApi.post<Paths.PlacesControllerCreate.Responses.$201>(
-    backendRoutes.places,
-    data,
-  )
-}
-
 export const usePlaces = (
   params?: Paths.PlacesControllerFindAll.QueryParameters | null,
 ) => {

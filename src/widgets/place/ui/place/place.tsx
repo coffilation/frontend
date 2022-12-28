@@ -11,11 +11,16 @@ import { useGeoPoint } from 'entities/geo-points/lib'
 type PlaceQuery = {
   osmType: string
   osmId: string
+  category: string
 }
 
 export const Place = () => {
-  const { osmType, osmId } = useParams<PlaceQuery>()
-  const { data: place } = useGeoPoint(osmType, osmId)
+  const { osmType, osmId, category } = useParams<PlaceQuery>()
+  const { data: place } = useGeoPoint(
+    osmType,
+    osmId ? parseInt(osmId) : undefined,
+    category,
+  )
 
   const navigate = useNavigate()
   const {

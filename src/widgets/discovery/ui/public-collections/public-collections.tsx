@@ -6,6 +6,7 @@ import React, { useMemo, useRef } from 'react'
 import { BottomSheet } from 'shared/ui'
 import { generatePath, Link, useLocation } from 'react-router-dom'
 import { Path } from 'shared/config'
+import { gradientToBackground } from '../../lib'
 
 export const PublicCollections = () => {
   const { data: collections } = useCollections()
@@ -33,6 +34,9 @@ export const PublicCollections = () => {
                   search: fromSearchParam,
                 }}
                 className={styles.itemLink}
+                style={{
+                  background: gradientToBackground(collection.gradient),
+                }}
               >
                 <span className={styles.itemContent}>{collection.name}</span>
               </Link>

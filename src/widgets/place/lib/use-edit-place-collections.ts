@@ -1,10 +1,8 @@
-import { postPlace, putPlaceCollections, usePlace } from 'entities/places/lib'
+import { putPlaceCollections, usePlace } from 'entities/places/lib'
 import { useCallback } from 'react'
-import { mutate } from 'swr'
-import { backendRoutes } from 'shared/api'
 
 export const useEditPlaceCollections = (
-  place: Components.Schemas.CreatePlaceDto | undefined
+  place: Components.Schemas.Place | undefined
 ) => {
   const { error: placeError, isValidating: isPlaceValidating } = usePlace(
     place?.osmId

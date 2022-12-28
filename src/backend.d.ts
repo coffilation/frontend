@@ -61,25 +61,25 @@ declare namespace Components {
       description?: string
       author?: User
       type: 'PUBLIC' | 'PRIVATE'
+      gradient?: CollectionGradient
+    }
+    export interface CollectionGradient {
+      startColor: Color
+      endColor: Color
+    }
+    export interface Color {
+      red: number
+      green: number
+      blue: number
     }
     export interface CreateCollectionDto {
       name: string
       type: 'PUBLIC' | 'PRIVATE'
       description?: string
+      gradient?: CollectionGradient
     }
     export interface CreateInviteDto {
       role: 'OWNER' | 'ADMIN' | 'EDITOR' | 'MEMBER'
-    }
-    export interface CreatePlaceDto {
-      name: string
-      latitude: number
-      longitude: number
-      osmId: number
-      osmType: string
-      displayName: string
-      category: string
-      type: string
-      address: Address
     }
     export interface CreateReviewDto {
       rating: number
@@ -104,6 +104,7 @@ declare namespace Components {
       password: string
     }
     export interface Place {
+      id: number
       name: string
       latitude: number
       longitude: number
@@ -131,9 +132,10 @@ declare namespace Components {
       name?: string
       type?: 'PUBLIC' | 'PRIVATE'
       description?: string
+      gradient?: CollectionGradient
     }
     export interface UpdateCollectionPlacesDto {
-      placeOsmIds: number[]
+      placeIds: number[]
     }
     export interface UpdatePlaceCollectionsDto {
       collectionIds: number[]
@@ -172,11 +174,11 @@ declare namespace Paths {
   }
   namespace CollectionsControllerFindAll {
     namespace Parameters {
-      export type PlaceOsmId = number
+      export type PlaceId = number
       export type UserId = number
     }
     export interface QueryParameters {
-      placeOsmId?: Parameters.PlaceOsmId
+      placeId?: Parameters.PlaceId
       userId?: Parameters.UserId
     }
     namespace Responses {
@@ -263,12 +265,6 @@ declare namespace Paths {
       export type $200 = Components.Schemas.Invite
     }
   }
-  namespace PlacesControllerCreate {
-    export type RequestBody = Components.Schemas.CreatePlaceDto
-    namespace Responses {
-      export interface $201 {}
-    }
-  }
   namespace PlacesControllerFindAll {
     namespace Parameters {
       export type CollectionId = number
@@ -284,10 +280,25 @@ declare namespace Paths {
   }
   namespace PlacesControllerFindOne {
     namespace Parameters {
+      export type Id = number
+    }
+    export interface PathParameters {
+      id: Parameters.Id
+    }
+    namespace Responses {
+      export type $200 = Components.Schemas.Place
+    }
+  }
+  namespace PlacesControllerFindOneByOsmData {
+    namespace Parameters {
+      export type Category = string
       export type OsmId = number
+      export type OsmType = string
     }
     export interface PathParameters {
       osmId: Parameters.OsmId
+      osmType: Parameters.OsmType
+      category: Parameters.Category
     }
     namespace Responses {
       export type $200 = Components.Schemas.Place
@@ -295,10 +306,10 @@ declare namespace Paths {
   }
   namespace PlacesControllerUpdatePlaceCollections {
     namespace Parameters {
-      export type OsmId = number
+      export type Id = number
     }
     export interface PathParameters {
-      osmId: Parameters.OsmId
+      id: Parameters.Id
     }
     export type RequestBody = Components.Schemas.UpdatePlaceCollectionsDto
     namespace Responses {
@@ -307,10 +318,10 @@ declare namespace Paths {
   }
   namespace ReviewsControllerCreate {
     namespace Parameters {
-      export type PlaceOsmId = number
+      export type PlaceId = number
     }
     export interface QueryParameters {
-      placeOsmId: Parameters.PlaceOsmId
+      placeId: Parameters.PlaceId
     }
     export type RequestBody = Components.Schemas.CreateReviewDto
     namespace Responses {
@@ -319,10 +330,10 @@ declare namespace Paths {
   }
   namespace ReviewsControllerFindAll {
     namespace Parameters {
-      export type PlaceOsmId = number
+      export type PlaceId = number
     }
     export interface QueryParameters {
-      placeOsmId: Parameters.PlaceOsmId
+      placeId: Parameters.PlaceId
     }
     namespace Responses {
       export type $200 = Components.Schemas.Review[]

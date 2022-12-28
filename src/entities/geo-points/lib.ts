@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import { searchRoutes, searchSWRFetcher } from 'shared/api'
+import { backendRoutes, searchRoutes, searchSWRFetcher } from 'shared/api'
 
 export const useGeoPoints = (
   search: string | undefined,
@@ -18,11 +18,12 @@ export const useGeoPoints = (
 
 export const useGeoPoint = (
   osmType: string | undefined,
-  osmId: string | undefined,
+  osmId: number | undefined,
+  category: string | undefined,
 ) => {
   return useSWR<Components.Schemas.Place>(
-    osmType && osmId
-      ? [searchRoutes.lookup, { params: { osmType, osmId } }]
+    osmType && osmId && category
+      ? [backendRoutes.placeByOsmData(osmId, osmType, category)]
       : null,
     searchSWRFetcher,
   )
